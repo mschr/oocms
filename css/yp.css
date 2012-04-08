@@ -1,0 +1,224 @@
+/*=======================Common To All Sites==================================*/
+FORM { margin-bottom: 0px; margin-top: 0px; }
+DIV { margin-bottom: 0px; margin-top: 0px; margin-left: 0px; margin-right: 0px;}
+
+a:active {
+	COLOR: #259FBD;
+	font-family: Arial;
+	FONT-STYLE: normal;
+	TEXT-DECORATION: none;
+	line-height: normal;
+	letter-spacing: 0;
+	font-size: 12px;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+}
+a:visited {
+	COLOR: #259FBD;
+	font-family: Arial;
+	FONT-STYLE: normal;
+	TEXT-DECORATION: none;
+	line-height: normal;
+	letter-spacing: 0;
+	font-size: 12px;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+}
+a:link {
+	COLOR: #259FBD;
+	font-family: Arial;
+	FONT-STYLE: normal;
+	TEXT-DECORATION: none;
+	letter-spacing: 0;
+	font-size: 12px;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: normal;
+}
+a:hover {
+	COLOR: #FFFFFF;
+	font-family: Arial;
+	FONT-STYLE: normal;
+	TEXT-DECORATION: underline;
+	line-height: normal;
+	letter-spacing: 0;
+	font-size: 12px;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+}
+
+.textfield {
+	font-family: Arial;
+	font-size: 12px;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: #000000; 
+	border-style: solid; 
+	border-top-width: 1px; 
+	border-right-width: 1px; 
+	border-bottom-width: 1px; 
+	border-left-width: 1px
+}
+.bigtextfield {
+	font-family: Arial;
+	font-size: 12px;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: #FFFFFF; 
+	border-style: solid; 
+	border-top-width: 8px; 
+	border-right-width: 8px; 
+	border-bottom-width: 8px; 
+	border-left-width: 8px;
+
+}
+
+.buttons {
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 12px;
+	font-weight: bold;
+	color:  #FFFFFF;
+	background-color: #4D8196;
+	border: 2px ;
+	padding: 2px;
+	margin: 2px;
+}
+.heading{
+	font-size: 20px;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-weight: bold;
+	color: #FFFFFF;
+
+}
+.subheading{
+	font-size: 18px;
+	font-family: Arial;
+	font-weight: normal;
+	color: #FFFFFF;
+
+}
+.contents {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	color: #FFFFFF;
+	text-decoration: none;
+	letter-spacing:0.3px;
+	line-height:20px;
+
+}
+.blackcontents {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	color: #000000;
+	text-decoration: none;
+	letter-spacing:0.3px;
+	line-height:20px;
+
+}
+.blackbold {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	letter-spacing:0.3px;
+	line-height:20px;
+
+}
+.whitecontents {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	color: #FFFFFF;
+	text-decoration: none;
+	letter-spacing:0.3px;
+	line-height:20px;
+
+}
+.red {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: normal;
+	color: #FF0000;
+	text-decoration: none;
+}
+.main {
+	font-size: 11px;
+	font-weight: normal;
+	color: #000000;
+	letter-spacing:0.3px;
+	line-height:15px;
+	text-decoration: none;
+	font-family: Arial;
+}
+
+.mainBold {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	letter-spacing:0.3px;
+	text-decoration: none;
+	font-style: normal;
+	line-height: normal;
+	font-variant: normal;
+	text-transform: none;
+}
+.footer_text{
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #259FBD;
+	letter-spacing:1px;
+	text-decoration: none;
+	font-style: normal;
+	line-height: normal;
+	font-variant: normal;
+	text-transform: none;
+}
+/*================================================================================*/
+
+ul{
+	margin:0px 0px 0px 20px;width:92px;float:left;
+}
+.li{ 
+	list-style-image: url(../images/bullet.jpg);
+	line-height:20px;
+}
+/*=====================Products ====================================================*/
+.whiteBold_12 {
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	font-family:  Arial, Helvetica, sans-serif;
+	
+}
+.saleprice {
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+	font-family:  Arial, Helvetica, sans-serif;
+}
+.price {
+	font-size: 12px;
+	font-weight: bold;
+	color: #FF0000;
+	font-family:  Arial, Helvetica, sans-serif;
+	text-decoration: line-through;
+	
+}
+
+.table_border{
+	border:1px solid #cccccc;
+	margin:0px 0px;
+	padding:0px;
+	margin:3px 0px;
+	padding:5px;
+}

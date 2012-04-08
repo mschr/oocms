@@ -1,0 +1,165 @@
+/* 
+    Document   : vertical-toc
+    Created on : 10-05-2009, 16:49:28
+    Author     : mschr
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.fisheyeTarget {
+		bottom:0;
+		cursor:pointer;
+		height:1px;
+		left:0;
+		position:absolute;
+		width:1px;
+		overflow:hidden;
+}
+
+.fisheyeTarget div.left {
+	background:transparent url(../gfx/xlink-left.png) no-repeat scroll;
+	width:9px;
+	height: 100%;
+	float:left;
+}
+.fisheyeTarget div.center {
+	background:transparent url(../gfx/xlink-center.png) repeat-x scroll;
+	height: 100%;
+	float:left;
+}
+.fisheyeTarget div.right {
+	background:transparent url(../gfx/xlink-right.png) no-repeat scroll;
+	width: 10px;
+	height: 100%;
+	float:left;
+}
+.inner{
+	bottom:5px;
+	cursor:pointer;
+	font-size:18px;
+	margin-left:10px;
+	position:absolute;
+}
+a.xLink {
+	white-space: nowrap;
+}
+#menuHeader {border-bottom:1px solid #F8D582;height:50px;margin-right:3px;position:relative;}
+#dojoXLink {bottom:0;cursor:pointer;padding:0;position:absolute;width:129px;}
+.tocBox {padding-bottom: 35px;}
+
+.item-wrap a.itemref {
+	background: url(http://dojocampus.org/dojotoolkit/dojoc/sandbox/menu/resources/AccordionMenuBg.png);
+	white-space: no-wrap;
+}
+
+
+body {
+	margin-top: 0;
+	margin-left: 0;
+	margin-right: 0;
+	margin-bottom: 0;
+}
+a:link {
+	text-decoration: none;
+	color:black;
+	border-width:0;
+	outline-width:0;
+}
+a:visited {
+	text-decoration: none;
+	color:black;
+	border-width:0;
+	outline-width:0;
+}
+a:active {
+	text-decoration: none;
+	color:black;
+	border-width:0;
+}
+a:hover {
+	color:blue;
+}
+
+a.image {
+	text-decoration:none;
+	background-color:#96a6ff;
+	color:#96a6ff;
+}
+img {
+	border : 0;
+}
+a.itemref {
+	z-index: 50;
+}
+/*
+div.item-c, div.subitem-c, div.subsubitem-c {
+	overflow: hidden;
+	line-height: 16px;
+	font-size: 14px;
+	font-family: Trebuchet MS, verdana;
+	}
+div.item-c a {
+	text-decoration: underline;
+	font-weight : 700;
+	color: #402800;
+}
+
+div.subitem-c a, div.subsubitem-c a,  div.subsubsubitem-c a{
+		color: inherit;
+	cursor: pointer;
+	font-weight :  500;
+	padding-left: 3px;
+	text-decoration: none;
+}
+
+div.item-c {
+	text-align: center;
+	margin-right: 8px;
+	margin-left: 8px;
+	border-width: 3px;
+	border-style: inset;
+	border-color: black;
+	width: 140px;
+	-moz-border-radius: 4px;
+}
+
+div.subitem-c {
+	margin-left: 8px;
+	margin-right: 8px;
+	border-width: 2px;
+	border-style: groove;
+	border-color: black;
+	text-align: left;
+	-moz-border-radius: 5px;
+}
+
+div.subsubitem-c {
+	margin-left: 8px;
+	margin-right: 8px;
+	border-width: 2px;
+	width: 100px;
+	border-style: groove;
+	border-color: gray;
+	-moz-border-radius: 7px;
+}
+
+div.subsubsubitem-c {
+	margin-left: 8px;
+	margin-right: 8px;
+	border-width: 2px;
+	width: 100px;
+	border-style: groove;
+	border-color: gray;
+	-moz-border-radius: 7px;
+}
+
+
+*/
+.tocBox {
+	border : 1px solid rgb(130, 130, 130);
+	-moz-border-radius: 5px;
+	background-image: url(../gfx/toc-gradient.png);
+	background-repeat: no-repeat;
+	width :/*MENU WIDTH*/ 159px;
+	padding:4px 5px 6px 0;
+}

@@ -1,0 +1,277 @@
+/* 
+    Document   : modules
+    Created on : 04-04-2012, 08:54:13
+    Author     : mschr
+    Description:
+        Purpose of the stylesheet follows.
+*/
+div.oocms_menu.tabs {
+   float:left;
+   width:100%;
+   background:#fff;
+   border-bottom:4px solid #000;
+   overflow:hidden;
+   position:relative;
+}
+div.oocms_menu.tabs ul {
+   clear:left;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   left:50%;
+   text-align:center;
+}
+div.oocms_menu.tabs ul li {
+   display:block;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   right:50%;
+}
+div.oocms_menu.tabs ul li a {
+   display:block;
+   margin:0 0 0 1px;
+   padding:3px 10px;
+   background:#ddd;
+   color:#000;
+   text-decoration:none;
+   line-height:1.3em;
+}
+div.oocms_menu.tabs ul li a:hover {
+   background:#369;
+   color:#fff;
+}
+div.oocms_menu.tabs ul li a.active,
+div.oocms_menu.tabs ul li a.active:hover {
+   color:#fff;
+   background:#000;
+   font-weight:bold;
+}
+
+div.oocms_menu.boxed1 ul.oocms_menu-horizontal{
+	margin: 0; 
+	padding: 0;
+	/*	float: left;*/
+	display: block;
+	height: 30px;
+
+}
+
+div.oocms_menu.boxed1 ul.oocms_menu-horizontal li{
+	display: inline;
+	margin: 0 20px;
+	line-height: 20px;
+}
+
+div.oocms_menu.boxed1 ul.oocms_menu-horizontal li a{
+	/*	float: left; */
+	text-decoration: none;
+	color: white;
+	padding: 10px 11px;
+	background-color: #333;
+
+	/** CSS3 additions */
+	text-shadow: 2px 2px 4px #333;
+	-moz-box-shadow: solid 1px 1px 5px rgba(25,25,214, 0.6);
+	-webkit-box-shadow: solid 1px 1px 5px rgba(25,25,214, 0.6);
+	box-shadow: solid 1px 1px 15px rgba(25,25,180, 0.6);
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#1919d6')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#1919d6');
+
+	-moz-transition: all 0.2s ease-in-out; 
+	-webkit-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+
+div.oocms_menu.boxed1 ul.oocms_menu-horizontal li a:visited{
+	color: white;
+}
+
+div.oocms_menu.boxed1 ul.oocms_menu-horizontal li a:hover,
+div.oocms_menu.boxed1 ul.oocms_menu-horizontal li .current{
+	color: #222;
+	background-color:#0b75b2;
+	text-shadow: 3px 3px 3px #333;
+	filter: dropshadow(color=#333, offx=4, offy=4); 
+}
+
+div.oocms_menu.tabs {
+   float:left;
+   width:100%;
+   background:#fff;
+   border-bottom:4px solid #000;
+   overflow:hidden;
+   position:relative;
+}
+div.oocms_menu.tabs ul {
+   clear:left;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   left:50%;
+   text-align:center;
+}
+div.oocms_menu.tabs ul li {
+   display:block;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   right:50%;
+}
+div.oocms_menu.tabs ul li a {
+   display:block;
+   margin:0 0 0 1px;
+   padding:3px 10px;
+   background:#ddd;
+   color:#000;
+   text-decoration:none;
+   line-height:1.3em;
+}
+div.oocms_menu.tabs ul li a:hover {
+   background:#369;
+   color:#fff;
+}
+div.oocms_menu.tabs ul li a.active,
+div.oocms_menu.tabs ul li a.active:hover {
+   color:#fff;
+   background:#000;
+   font-weight:bold;
+}
+
+/* vertical menu */
+
+
+div.oocms_menu.boxed1 ul.oocms_menu-vertical{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+div.oocms_menu.boxed1 ul.oocms_menu-vertical li{
+	background-color: #333;
+	margin-bottom: 3px;
+	/** CSS3 additions */
+	moz-border-radius: 0 21px 5px 0;
+	-webkit-border-radius: 0 21px 5px 0;
+	border-radius: 0 21px 5px 0;
+}
+
+div.oocms_menu.boxed1 ul.oocms_menu-vertical li a{
+	font: bold 13px "Lucida Grande", "Trebuchet MS", Verdana;
+	display: block;
+	color: #FFF;
+	width: auto;
+	padding: 5px 0 5px 8px;
+	text-decoration: none;
+	/** CSS3 additions */
+	text-shadow: 2px 2px 3px #000;
+
+	moz-border-radius: 0 21px 5px 0;
+	-webkit-border-radius: 0 21px 5px 0;
+	border-radius: 0 21px 5px 0;
+	-moz-box-shadow: inset -3px 0 5px rgba(114,114,114, 0.6);
+	-webkit-box-shadow: inset -3px 0 5px rgba(114,114,114, 0.6);
+	box-shadow: inset -3px 0 5px rgba(114,114,114, 0.6);
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Color='#727272')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#727272');
+
+	-moz-transition: all 0.2s ease-in-out; 
+	-webkit-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+
+div.oocms_menu.boxed1 ul.oocms_menu-vertical li a:visited, ul.oocms_menu-vertical li a:active{
+	color: white;
+}
+
+div.oocms_menu.boxed1 ul.oocms_menu-vertical li a:hover{
+	background-color: black;
+	color: #DF6;
+	text-shadow: 3px 3px 4px #66F;
+	filter: dropshadow(color=#00F, offx=2, offy=2); 
+
+}
+/* vertical menu */
+
+div.oocms_menu.boxed2 ul.oocms_menu-vertical{
+	/*	width: 200px;*/
+	overflow: hidden;
+	background: transparent; 
+	margin: 0;
+	padding: 0;
+	padding-top: 7px; 
+	list-style-type: none;
+}
+
+div.oocms_menu.boxed2 ul.oocms_menu-vertical li{
+	text-align: right;
+}
+
+div.oocms_menu.boxed2 ul.oocms_menu-vertical li a{
+	position: relative;
+	display: inline-block;
+	text-indent: 5px;
+	overflow: hidden;
+	background: rgb(127, 201, 68);
+	font: bold 16px Germand;
+	text-decoration: none;
+	padding: 5px 12px;
+	margin-bottom: 7px;
+	color: black;
+	/** CSS3 additions */
+	moz-border-radius: 5px 5px 5px 21px;
+	-webkit-border-radius: 5px 5px 5px 21px;
+	border-radius: 5px 5px 5px 21px;
+	text-shadow: 2px 2px 4px #FF6;
+
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=85, Color='#727272')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=85, Color='#727272');
+	-moz-box-shadow: inset -7px 0 5px rgba(114,114,114, 0.8);
+	-webkit-box-shadow: inset -7px 0 5px rgba(114,114,114, 0.8);
+	box-shadow: inset -7px 0 5px rgba(114,114,114, 0.8);
+
+	-moz-transition: all 0.2s ease-in-out; 
+	-webkit-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-ms-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+
+div.oocms_menu.boxed2 ul.oocms_menu-vertical li a:hover{
+	padding: 5px 20px 5px 15px;
+	color: white;
+	text-shadow: 2px 2px 4px #444; /*#FF6;*/
+	background: rgb(153,249,75);
+	/** CSS3 additions */
+	-moz-box-shadow: inset -3px 0 2px rgba(114,114,114, 0.8);
+	-webkit-box-shadow: inset -3px 0 5px rgba(114,114,114, 0.8);
+	box-shadow: inset -3px 0 5px rgba(114,114,114, 0.8);
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=85, Color='#727272')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=85, Color='#727272');
+}
+
+/*<!--[if IE]>      Menu link width value for IE 
+ul.oocms_menu-vertical li a{ 
+width: 100%;
+}
+<![endif]-->*/

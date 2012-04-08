@@ -1,0 +1,509 @@
+/* 
+    Document   : admin
+    Created on : 26-03-2012, 16:31:45
+    Author     : mschr
+    Description:
+        Purpose of the stylesheet follows.
+*/
+html, body {
+	overflow: hidden
+}
+body {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	background-color: rgb( 248,241,238 );
+	margin:0;
+	padding:0;
+	width:100%;
+	min-width:600px;		/* Minimum width of layout - remove line if not required */
+	/* The min-width property does not work in old versions of Internet Explorer */
+	/*	font-size:90%;*/
+}
+#mainleftColumn.folded {
+	width: 20px;
+	border: none;
+	padding-right: 6px;
+}
+#mainleftColumn.folded #adminmenuTreeNode {
+	display:none;
+}
+#mainleftColumn.folded div.headertext {
+	-webkit-transform: rotate(-270deg);			
+	-moz-transform: rotate(-270deg);
+	position: relative;
+	top: 10px;
+	left: -5px;
+}
+#mainleftColumn.folded .paneHeader {
+	height: 90px;
+	-moz-box-shadow: 4px 4px 3px #888;
+	-webkit-box-shadow: 4px 4px 3px #888;
+}
+.header {
+	float:left;
+	width:100%;
+	padding:0;
+	margin:0;
+}
+div.paneHeader.adminTop {
+	-webkit-box-shadow: 0 4px 6px;
+	-moz-box-shadow: 0 4px 6px;
+	box-shadow: 0 4px 6px;
+	border-radius: 0 0 6px 6px;
+	height: 24px;
+	line-height: 24px;
+	margin: 0 1% 10px;
+	width: 97%;
+}
+.adminBox {
+	border: 1px solid #D0D0D0;
+	margin: 0 5px 5px 5px;
+	padding: 0;
+}
+.colmask {
+	position:relative;	/* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */
+	clear:both;
+	float:left;
+	width:100%;			/* width of whole page */
+	overflow:hidden;		/* This chops off any overhanging divs */
+}
+.colmid {
+	float:left;
+	width:200%;
+	position:relative;
+	left:200px;
+}
+.colright {
+	float:left;
+	width:100%;
+	position:relative;
+	left:50%;
+	margin-left:-400px;
+}
+.col1wrap {
+	float:right;
+	width:50%;
+	position:relative;
+	right:100%;
+}
+.col1pad {
+	margin-left:400px;
+	overflow:hidden;
+}
+.col1 {
+	width:100%;
+	overflow:hidden;
+}
+.col2 {
+	float:left;
+	width:200px;
+	position:relative;
+	margin-left:-50%;
+	left:200px;
+	overflow:hidden;
+}
+.col3 {
+	float:left;
+	width:170px;
+	position:relative;
+	left:15px;
+	overflow:hidden;
+}
+#footer {
+	clear:both;
+	float:left;
+	width:100%;
+	padding:0;
+	margin:0;
+	border-top:1px solid #000;
+}
+#mainContentPane {
+	height: 100%;
+	overflow-y:hidden;
+}
+#mainContentPane #leftcolumn,
+#mainContentPane #centercolumn,
+#mainContentPane #rightcolumn
+{
+	height: 100%;
+	position: relative;
+	border: 1px solid #D0D0D0;
+	border-top: none thin;
+	overflow-y: auto;
+}
+#mainContentPane #leftcolumn {
+	width:200px;
+	float:left;
+}
+#mainContentPane #centercolumn {
+	margin-left: 205px;
+
+}
+#mainContentPane #rightcolumn {
+	width:200px;
+	float:right;
+}
+
+#mainContentPane .lastColumn {
+	border-right: none !important;
+}
+#mainContentPane .firstColumn {
+	border-left: none !important;
+}
+/*
+#outerWrap {
+	position: absolute;
+	bottom: 18px;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	overflow: hidden;
+}
+#mainleftColumn, #mainContentPane {
+	float:left;
+	height: 99%;
+	margin: 3px;
+	position:relative;
+	overflow:auto;
+	padding: 0 !important;
+	border: 1px solid #D0D0D0;
+}
+#mainleftColumn {
+	width: 175px;
+}
+#mainContentPane {
+	position: relative;
+}
+.clear {
+	clear: both
+}
+*/
+.paneHeader {
+	color: #333;
+	font-weight: bold;
+	font-size: 12px;
+	font-family: tahoma,arial,verdana,sans-serif;
+	border: 1px solid #D0D0D0;
+	border-top: none;
+	background-image: url(../../gfx/paneHeader_bg.gif);
+	height: 18px;
+	padding: 4px 2px 4px 10px;
+	line-height: 18px;
+	vertical-align: middle;
+}
+.dijitToolbar {
+	padding-left: 5px;
+	padding-bottom: 2px;
+}
+.dijitToolbar .dijitButton {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+.dijitToolbar .dijitButtonNode { 
+	background: none !important; 
+}
+.dijitToolbar .dijitButtonText {
+	font-family: verdana;
+	font-size: 0.96em;
+}
+div.dijitTreeRow._treenodeSelected {
+	background-image: url('/dojo-release-1.7.2-src/dijit/themes/claro/images/commonHighlight.png');
+	background-color: rgba(239,239,239,0.7)
+}
+.dijitDialog.loginDialog .topheadline {
+	font-size: 0.9em;
+}
+.dijitDialog.loginDialog table.logintable td {
+}
+.dijitDialog.loginDialog .bottomheadline, 
+.dijitDialog.loginDialog .bottomtext,
+.dijitDialog.loginDialog .footer,
+.dijitDialog.loginDialog .tail {
+	display: none;
+}
+.dijitDialog.loginDialog .line {
+	height: 300px;
+	margin: 17px 40px !important;
+	border: none;
+	background-position: 0 0;
+	min-width: 0 !important;
+}
+dijitDialog.loginDialog .notify {
+	margin-left: auto !important;
+	min-width: 0 !important;
+}
+.apperror {
+	position:absolute;
+	background-color: rgb(220,225,20);
+	font-size: small;
+	font-variant: georgia;
+	text-align: center;
+	bottom: 18px;
+	margin:0;
+	color: rgb(102,102,102);
+	width: 100%;
+	height: auto;
+	line-height: 16px;
+	vertical-align: middle
+}
+.footer {
+	position:absolute;
+	background-color: rgb(142,142,165);
+	font-size: small;
+	font-variant: georgia;
+	text-align: center;
+	bottom: 0px;
+	margin:0;
+	color: whiteSmoke;
+	width: 100%;
+	height: 17px;
+	line-height: 17px;
+	vertical-align: middle
+}
+/**
+  *  Ajax notification styling
+*/
+.ajax_notification {
+	top: 0px;           /** The notification needs to be shown on the top of the page */
+	position: fixed;
+	margin-top: 0;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+	padding: 5px;   /** Keep a little space on the sides of the text */
+	width: 350px;
+
+	z-index: 1100;      /** If this is not kept at a high z-index, the jQueryUI modal dialogs (z-index:1000) might hide this */
+	text-align: center;
+	display: inline;
+	left: 0;
+	right: 0;
+	background-repeat: no-repeat;
+	background-position: 2%;
+	border:1px solid #e2b709;
+}
+
+/* additional styles */
+.ajax_notification_title {
+	text-shadow: rgba(0,0,0,0.5) -1px 0, rgba(0,0,0,0.3) 0 -1px, rgba(255,255,255,0.8) 0 1px, rgba(0,0,0,0.3) -1px -2px;
+	color:#47725a;
+	font-size:18px;
+	letter-spacing: 0.04em
+}
+.ajax_notification{
+	margin-top:200px;
+	/*	background:#ffe57e;*/
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	box-shadow: 0px 5px 50px #333;
+	-moz-box-shadow: 0px 5px 50px #333;
+	-webkit-box-shadow: 0px 5px 50px #333;
+	background: -moz-linear-gradient(-90deg,#ffe57e,#FFF7a9);
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffe57e), to(#FFF7a9));
+}
+
+#loading_parent {
+	/** Need this parent to properly center the notification division */
+	position: relative;
+	width: 100%;
+	display: none;
+}
+/* mceButton-ish metadata table styling */
+tbody.mceLookFeel div.mceButtonStyle {
+	background-color:#cadbee;
+	border-top: 1px solid #a0bce2;
+	border-bottom: 1px solid #a0bce2;
+	border-left: 1px solid #e8f0f7;
+	border-right: 1px solid #becddb;
+	margin: 2px 0px;
+	height: 46px;
+	padding: 4px;
+}
+tbody.mceLookFeel div.last {
+	margin-right: 12px;
+	border-right: 1px solid #a0bce2;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topright: 3px;
+	border-radius-topright: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	border-radius-bottomright: 3px;
+}
+tbody.mceLookFeel div.first {
+	margin-left: 12px;
+	border-left: 1px solid #a0bce2;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-radius-bottomleft: 3px;
+	-webkit-border-top-left-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	border-radius-topleft: 3px;
+}
+
+tbody.mceLookFeel label {
+	padding-bottom: 4px;
+	padding-left: 4px;
+	font-size: 15px;
+}
+
+.mceButtonStyle input {
+	padding: 2px;
+	font-size: small;
+}
+tbody.mceLookFeel td {
+	padding:0;
+	margin:0;
+	font-size: 14px;
+	/*width: 25% !important;*/
+}
+tbody.mceLookFeel span.dateformat {
+	font-size: 0.95em;
+	color: #0d017f;
+}
+tbody.mceLookFeel span.urlformat {
+	color: #0d017f;
+	font-style: italic;
+}
+tr.mceFirst div.mceButtonStyle {
+	margin-top: 7px;
+}
+tr.mceLast div.mceButtonStyle {
+	margin-bottom: 7px;
+}
+tbody.mceLookFeel ul.mceLinkList {
+	background-color:#cadbee;
+	/*	border-top: 1px solid #a0bce2;*/
+	border-bottom: 1px solid #a0bce2;
+	border-left: 1px solid #e8f0f7;
+	border-right: 1px solid #becddb;
+	margin: 0 4px 4px;
+	height: 20px;
+	padding: 0;
+	padding-top: 4px;
+
+}
+
+
+
+#websiteadminwrapper table td {
+	color: rgb(30,30,30);
+	font-size:1.2em;
+	padding:8px 0;
+}
+#websiteadminwrapper table tr td:last-child {
+	padding-right: 15px;
+	padding-left: 20px;
+}
+#websiteadminwrapper table tr td:last-child,
+#websiteadminwrapper table td .dijitTextBox {
+	color: black;
+}
+
+#websiteadminwrapper {
+	color:gray;
+	/*		font-size:13pt;*/
+	text-decoration:none !important;
+	text-transform:none;
+	position:relative;
+}
+
+
+
+.assetsDnD {
+/*	width: 330px;
+	height: 151px;*/
+	position: relative;
+	margin: 20px;
+}
+.assetsDnD-title {
+	text-align:center;
+	font-size: 1em;
+	color: #665aaa;
+	
+	text-shadow: 1px 1px 2px #333;
+	filter: dropshadow(color=#333, offx=1, offy=1); 
+}
+.assetsDnD .dndAcceptance
+{
+	width: 310px;
+	height: 131px;
+	background: url("dropbox.png") top left no-repeat;
+/*	margin-bottom: 20px;*/
+}
+.assetsDnD .dndAcceptance.hover {
+	background: url("dropboxHover.png") top left no-repeat;
+}
+/*.assetsDnD .dndAcceptance {
+	position: absolute;
+	top:8px;
+	left: 8px;
+	width: 160px;
+	height: 125px;
+	border: 2px solid rgb(179,180,213);
+	-moz-transition: all 0.6s ease-in-out; 
+	-webkit-transition: all 0.6s ease-in-out;
+	-o-transition: all 0.6s ease-in-out;
+	-ms-transition: all 0.6s ease-in-out;
+	transition: all 0.6s ease-in-out;
+}
+.assetsDnD .dndAcceptance {
+	 IE9 SVG, needs conditional override of 'filter' to 'none' 
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjYjNiNGQ1IiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2RjZGVlYyIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+	background: -moz-linear-gradient(-45deg,  rgba(179,180,213,1) 0%, rgba(220,222,236,0) 100%);  FF3.6+ 
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(179,180,213,1)), color-stop(100%,rgba(220,222,236,0)));  Chrome,Safari4+ 
+	background: -webkit-linear-gradient(-45deg,  rgba(179,180,213,1) 0%,rgba(220,222,236,0) 100%);  Chrome10+,Safari5.1+ 
+	background: -o-linear-gradient(-45deg,  rgba(179,180,213,1) 0%,rgba(220,222,236,0) 100%);  Opera 11.10+ 
+	background: -ms-linear-gradient(-45deg,  rgba(179,180,213,1) 0%,rgba(220,222,236,0) 100%);  IE10+ 
+	background: linear-gradient(-45deg,  rgba(179,180,213,1) 0%,rgba(220,222,236,0) 100%);  W3C 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3b4d5', endColorstr='#00dcdeec',GradientType=1 );  IE6-8 fallback on horizontal gradient 
+	box-shadow: 0px 1px 8px  rgba(114,114,114, 0.6);
+	-webkit-box-shadow: 0px 1px 8px  rgba(114,114,114, 0.6);
+	-moz-box-shadow: 0px 1px 8px rgba(114,114,114, 0.6);
+
+}*/
+.assetsDnD .dndAcceptance.dndDone {
+	border: 2px dashed #47725a;
+}
+
+.OoIcon-18, .OoIcon-24, .OoIcon-48 {
+	background-repeat: no-repeat;
+	text-align: center;
+}
+div#outerWrap .OoIcon-18 {width: 18px;height: 18px;}
+div#outerWrap .OoIcon-24 {width: 24px;height: 24px;}
+div#outerWrap .OoIcon-48 {width: 48px;height: 48px;}
+
+.OoIcon-18.OoIconPage {background-image: url(../../ico/oo_page-18.png)}
+.OoIcon-24.OoIconPage {background-image: url(../../ico/oo_page-24.png)}
+.OoIcon-48.OoIconPage {background-image: url(../../ico/oo_page-48.png)}
+
+.OoIcon-18.OoIconEditFocus {background-image: url(../../ico/oo_focusitem-18.png)}
+
+.OoIcon-18.OoIconInfo {background-image: url(../../ico/oo_info-18.png)}
+.OoIcon-24.OoIconInfo {background-image: url(../../ico/oo_info-24.png)}
+.OoIcon-48.OoIconInfo {background-image: url(../../ico/oo_info-48.png)}
+
+.OoIcon-18.OoIconPageRelation {background-image: url(../../ico/oo_pagerelation-18.png)}
+.OoIcon-24.OoIconPageRelation {background-image: url(../../ico/oo_pagerelation-24.png)}
+.OoIcon-48.OoIconPageRelation {background-image: url(../../ico/oo_pagerelation-48.png)}
+
+.OoIcon-18.OoIconProduct {background-image: url(../../ico/oo_product-18.png)}
+.OoIcon-24.OoIconProduct {background-image: url(../../ico/oo_product-24.png)}
+.OoIcon-48.OoIconProduct {background-image: url(../../ico/oo_product-48.png)}
+
+.OoIcon-18.OoIconProductCategory {background-image: url(../../ico/oo_productcategory-18.png)}
+.OoIcon-24.OoIconProductCategory {background-image: url(../../ico/oo_productcategory-24.png)}
+.OoIcon-48.OoIconProductCategory {background-image: url(../../ico/oo_productcategory-48.png)}
+
+
+
+.claro .dojoDndHorizontal .dojoDndItemBefore{
+	border-top: none;
+	border-left: 1px solid #759dc0;
+}
+.claro .dojoDndHorizontal .dojoDndItemAfter {
+	border-top: none;
+	border-right: 1px solid #759dc0;
+}

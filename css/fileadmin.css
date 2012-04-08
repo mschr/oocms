@@ -1,0 +1,178 @@
+.OoCmSIconAsset {
+	background: url(../ico/oo_assets-spritesheet.png) no-repeat 0 -1728px;
+	width: 16px; height: 16px;
+}
+.OoCmSIconAsset-7z{ background-position: 0 0; } 
+.OoCmSIconAsset-ai{ background-position: 0 -36px; } 
+.OoCmSIconAsset-aiff{ background-position: 0 -72px; } 
+.OoCmSIconAsset-asc{ background-position: 0 -108px; } 
+.OoCmSIconAsset-audio{ background-position: 0 -144px; } 
+.OoCmSIconAsset-bin{ background-position: 0 -180px; } 
+.OoCmSIconAsset-bz2{ background-position: 0 -216px; } 
+.OoCmSIconAsset-c{ background-position: 0 -252px; } 
+.OoCmSIconAsset-cfc{ background-position: 0 -288px; } 
+.OoCmSIconAsset-cfm{ background-position: 0 -324px; } 
+.OoCmSIconAsset-chm{ background-position: 0 -360px; } 
+.OoCmSIconAsset-class{ background-position: 0 -396px; } 
+.OoCmSIconAsset-conf{ background-position: 0 -432px; } 
+.OoCmSIconAsset-cpp{ background-position: 0 -468px; } 
+.OoCmSIconAsset-cs{ background-position: 0 -504px; } 
+.OoCmSIconAsset-css{ background-position: 0 -540px; } 
+.OoCmSIconAsset-csv{ background-position: 0 -576px; } 
+.OoCmSIconAsset-deb{ background-position: 0 -612px; } 
+.OoCmSIconAsset-divx{ background-position: 0 -648px; } 
+.OoCmSIconAsset-doc{ background-position: 0 -684px; } 
+.OoCmSIconAsset-dot{ background-position: 0 -720px; } 
+.OoCmSIconAsset-eml{ background-position: 0 -756px; } 
+.OoCmSIconAsset-enc{ background-position: 0 -792px; } 
+.OoCmSIconAsset-file{ background-position: 0 -828px; } 
+.OoCmSIconAsset-gif{ background-position: 0 -864px; } 
+.OoCmSIconAsset-gz{ background-position: 0 -900px; } 
+.OoCmSIconAsset-hlp{ background-position: 0 -936px; } 
+.OoCmSIconAsset-htm{ background-position: 0 -972px; } 
+.OoCmSIconAsset-html{ background-position: 0 -1008px; } 
+.OoCmSIconAsset-image{ background-position: 0 -1044px; } 
+.OoCmSIconAsset-iso{ background-position: 0 -1080px; } 
+.OoCmSIconAsset-jar{ background-position: 0 -1116px; } 
+.OoCmSIconAsset-java{ background-position: 0 -1152px; } 
+.OoCmSIconAsset-jpeg{ background-position: 0 -1188px; } 
+.OoCmSIconAsset-jpg{ background-position: 0 -1224px; } 
+.OoCmSIconAsset-js{ background-position: 0 -1260px; } 
+.OoCmSIconAsset-lua{ background-position: 0 -1296px; } 
+.OoCmSIconAsset-m{ background-position: 0 -1332px; } 
+.OoCmSIconAsset-mm{ background-position: 0 -1368px; } 
+.OoCmSIconAsset-mov{ background-position: 0 -1404px; } 
+.OoCmSIconAsset-mp3{ background-position: 0 -1440px; } 
+.OoCmSIconAsset-mpg{ background-position: 0 -1476px; } 
+.OoCmSIconAsset-odc{ background-position: 0 -1512px; } 
+.OoCmSIconAsset-odf{ background-position: 0 -1548px; } 
+.OoCmSIconAsset-odg{ background-position: 0 -1584px; } 
+.OoCmSIconAsset-odi{ background-position: 0 -1620px; } 
+.OoCmSIconAsset-odp{ background-position: 0 -1656px; } 
+.OoCmSIconAsset-ods{ background-position: 0 -1692px; } 
+.OoCmSIconAsset-odt{ background-position: 0 -1728px; } 
+.OoCmSIconAsset-ogg{ background-position: 0 -1764px; } 
+.OoCmSIconAsset-pdf{ background-position: 0 -1800px; } 
+.OoCmSIconAsset-pgp{ background-position: 0 -1836px; } 
+.OoCmSIconAsset-php{ background-position: 0 -1872px; } 
+.OoCmSIconAsset-pl{ background-position: 0 -1908px; } 
+.OoCmSIconAsset-png{ background-position: 0 -1944px; } 
+.OoCmSIconAsset-ppt{ background-position: -36px 0; } 
+.OoCmSIconAsset-ps{ background-position: -36px -36px; } 
+.OoCmSIconAsset-py{ background-position: -36px -72px; } 
+.OoCmSIconAsset-ram{ background-position: -36px -108px; } 
+.OoCmSIconAsset-rar{ background-position: -36px -144px; } 
+.OoCmSIconAsset-rb{ background-position: -36px -180px; } 
+.OoCmSIconAsset-rm{ background-position: -36px -216px; } 
+.OoCmSIconAsset-rpm{ background-position: -36px -252px; } 
+.OoCmSIconAsset-rtf{ background-position: -36px -288px; } 
+.OoCmSIconAsset-sig{ background-position: -36px -324px; } 
+.OoCmSIconAsset-sql{ background-position: -36px -360px; } 
+.OoCmSIconAsset-swf{ background-position: -36px -396px; } 
+.OoCmSIconAsset-sxc{ background-position: -36px -432px; } 
+.OoCmSIconAsset-sxd{ background-position: -36px -468px; } 
+.OoCmSIconAsset-sxi{ background-position: -36px -504px; } 
+.OoCmSIconAsset-sxw{ background-position: -36px -540px; } 
+.OoCmSIconAsset-tar{ background-position: -36px -576px; } 
+.OoCmSIconAsset-tex{ background-position: -36px -612px; } 
+.OoCmSIconAsset-tgz{ background-position: -36px -648px; } 
+.OoCmSIconAsset-txt{ background-position: -36px -684px; } 
+.OoCmSIconAsset-vcf{ background-position: -36px -720px; } 
+.OoCmSIconAsset-video{ background-position: -36px -756px; } 
+.OoCmSIconAsset-vsd{ background-position: -36px -792px; } 
+.OoCmSIconAsset-wav{ background-position: -36px -828px; } 
+.OoCmSIconAsset-wma{ background-position: -36px -864px; } 
+.OoCmSIconAsset-wmv{ background-position: -36px -900px; } 
+.OoCmSIconAsset-xls{ background-position: -36px -936px; } 
+.OoCmSIconAsset-xml{ background-position: -36px -972px; } 
+.OoCmSIconAsset-xpi{ background-position: -36px -1008px; } 
+.OoCmSIconAsset-xvid{ background-position: -36px -1044px; } 
+.OoCmSIconAsset-zip{ background-position: -36px -1080px; } 
+
+
+.filesadminIcon {
+}
+.filesadminIcon-png { background-image:url(../fileadmin/fileadminicons/jpg.gif) }
+.filesadminIcon-jpeg{ background-image:url(../fileadmin/fileadminicons/jpg.gif) }
+.filesadminIcon-bmp { background-image:url(../fileadmin/fileadminicons/jpg.gif) }
+.filesadminIcon-jpg { background-image:url(../fileadmin/fileadminicons/jpg.gif) } 
+.filesadminIcon-gif { background-image:url(../fileadmin/fileadminicons/gif.gif) }
+.filesadminIcon-zip { background-image:url(../fileadmin/fileadminicons/archive.png) }
+.filesadminIcon-rar { background-image:url(../fileadmin/fileadminicons/archive.png) }
+.filesadminIcon-exe { background-image:url(../fileadmin/fileadminicons/exe.gif) }
+.filesadminIcon-setup{ background-image:url(../fileadmin/fileadminicons/setup.gif) }
+.filesadminIcon-txt { background-image:url(../fileadmin/fileadminicons/text.png) }
+.filesadminIcon-htm { background-image:url(../fileadmin/fileadminicons/html.gif) }
+.filesadminIcon-html{ background-image:url(../fileadmin/fileadminicons/html.gif) }
+.filesadminIcon-fla { background-image:url(../fileadmin/fileadminicons/fla.gif) }
+.filesadminIcon-swf { background-image:url(../fileadmin/fileadminicons/swf.gif) }
+.filesadminIcon-xls { background-image:url(../fileadmin/fileadminicons/xls.gif) }
+.filesadminIcon-doc { background-image:url(../fileadmin/fileadminicons/doc.gif) }
+.filesadminIcon-sig { background-image:url(../fileadmin/fileadminicons/sig.gif) }
+.filesadminIcon-fh10{ background-image:url(../fileadmin/fileadminicons/fh10.gif) }
+.filesadminIcon-pdf { background-image:url(../fileadmin/fileadminicons/pdf.gif) }
+.filesadminIcon-psd { background-image:url(../fileadmin/fileadminicons/psd.gif) }
+.filesadminIcon-rm  { background-image:url(../fileadmin/fileadminicons/real.gif) }
+.filesadminIcon-mpg { background-image:url(../fileadmin/fileadminicons/video.gif) }
+.filesadminIcon-mpeg{ background-image:url(../fileadmin/fileadminicons/video.gif) }
+.filesadminIcon-mov { background-image:url(../fileadmin/fileadminicons/video2.gif) }
+.filesadminIcon-avi { background-image:url(../fileadmin/fileadminicons/video.gif) }
+.filesadminIcon-eps { background-image:url(../fileadmin/fileadminicons/eps.gif) }
+.filesadminIcon-gz  { background-image:url(../fileadmin/fileadminicons/archive.png) }
+.filesadminIcon-asc { background-image:url(../fileadmin/fileadminicons/sig.gif) }
+.filesadminIcon-sizesort, .filesadminIcon-datesort, .filesadminIcon-namesort {
+	width: 20px;
+	height: 19px
+}
+.filesadminIcon-sizesort{ background-image:url(../gfx/size_desc.gif) }
+.filesadminIcon-datesort{ background-image:url(../gfx/date_desc.gif) }
+.filesadminIcon-namesort{ background-image:url(../gfx/name_desc.gif) }
+table.mceLayout { background: #E5EFFD none repeat scroll 0 0}
+span, div, tr, td, tbody, table { padding: 0; margin: 0;}
+span.uploadAction {
+	cursor: pointer;
+	position:relative;
+	padding-left: 20px;
+/*	margin: 2px;*/
+	border: 1px solid darkBlue;
+	font-size: 0.8em;
+	line-height: 20px;
+}
+span.actionBg {
+	background: transparent url(../fileadmin/fileadminicons/button-bg.gif);
+}
+span.uploadAction div {
+	position:absolute;
+	display:block;
+	top:0;
+	left:0;
+	background-color: transparent;
+}
+
+span.treeAction {
+	width: 21px;
+	height: 21px;
+}
+h4, ul { margin: 2px }
+
+table.ajax {
+	position:absolute;
+	top:0;
+	left:0;
+}
+.ajax-loader {
+	background: url(../gfx/anim.gif) no-repeat center 60px;/*progress*/
+}
+.dijitEditorIconSep {
+	margin-left: 6px;
+}
+.dijitTreeNodeSelected span.dijitTreeLabel {
+	font-weight: 700 !important;
+}
+div.mceButtonStyle .dijitTreeNode   { background-image: url(../gfx/treeI.gif) }
+div.mceButtonStyle .dijitTreeIsLast { background-image: url(../gfx/treeI_half.gif) }
+div.mceButtonStyle .dijitTreeExpandoOpened,
+div.mceButtonStyle .dijitTreeExpandoClosed,
+div.mceButtonStyle .dijitTreeExpandoLeaf
+{background-image: url(../gfx/spriteTree.gif);}
+#nodeselectActionText li { whitespace:normal!important;}

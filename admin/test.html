@@ -1,0 +1,25 @@
+<script src="/dojo-release-1.7.2-src/dojo/dojo.js"></script>
+<script>
+		var dojoDocRootDots = "";
+	for(var i = 0; i < dojo.baseUrl.substring(1,dojo.baseUrl.length-1).split("/").length; i++) dojoDocRootDots += "../";
+require({
+		packages: [ {
+			name: 'OoCmS', 
+			location: dojoDocRootDots +  '/oocms/admin/include'
+		} ],
+	async: false
+	}, ['dojo/_base/window',
+	'dojo/_base/declare', 
+	"OoCmS/application",
+	"dojo/parser",
+	'dojo/domReady!',
+	'OoCmS/page',
+	'OoCmS/pagetree',
+	'OoCmS/assets',
+	'OoCmS/config'
+		
+	], function() {
+		console.log('DONE')
+	})
+
+</script>

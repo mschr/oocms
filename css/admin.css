@@ -1,0 +1,55 @@
+.ajax-loader {
+	background: url(../gfx/anim.gif) no-repeat center center;/*progress*/
+}
+/*
+o7k2skin overrides
+*/
+table.done {
+	display:none;
+}
+table.ajax {
+	position:absolute;
+	top:0;
+	left:0;
+}
+.dijitTreeNodeSelected span.dijitTreeLabel {
+	font-weight: 700 !important;
+}
+div.mceButtonStyle .dijitTreeNode   { background-image: url(../gfx/treeI.gif) }
+div.mceButtonStyle .dijitTreeIsLast { background-image: url(../gfx/treeI_half.gif) }
+div.mceButtonStyle .dijitTreeExpandoOpened,
+div.mceButtonStyle .dijitTreeExpandoClosed,
+div.mceButtonStyle .dijitTreeExpandoLeaf
+{background-image: url(../gfx/spriteTree.gif);}
+#nodeselectActionText li { whitespace:normal!important;}
+table.mceLayout { background: #E5EFFD none repeat scroll 0 0}
+span, div, tr, td, tbody, table { padding: 0; margin: 0; }
+label.tiny {
+	font-size: 11px !important;
+	font-variant : verdana;
+	text-transform : capitalize;
+}
+
+span.tiny {
+	font-size: 11px !important;
+	font-variant : verdana;
+}
+
+tbody.mceLookFeel li {
+	white-space: normal;
+	font-size: 12px !important;
+	font-variant : verdana;
+}
+td.infoNodes h4
+{
+	font-weight: 700;
+	margin: 8px 0 ;
+}
+td.infoNodes div.mceButtonStyle {
+	min-height:70px !important;
+	height: auto !important;
+	padding-left: 18px;
+	padding-right: 6px;
+	width: 91%;
+	line-height: 16px;
+}

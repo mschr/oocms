@@ -1,0 +1,36 @@
+<?php
+// ** WARNING, AUTO GENERATED CONTENTS **
+// DO NOT CHANGE THIS FILE MANUALLY
+$CONFIG["webmaster"]			= "webmaster@mydomain";
+$CONFIG["sitename"]			= "mysite";
+$CONFIG["siteowner"]			= "me";
+$CONFIG["keywords"]			= "meta,sso,searchengine,siteinfo";
+$CONFIG["description"]			= "this is my site";
+$CONFIG["active_forms"]			= "";
+$CONFIG["domain"]			= "mydomain";
+$CONFIG["document_root"]		= "/var/www/oocms_demo/";
+$CONFIG["relurl"]			= "/oocms_demo/";
+$CONFIG["db_host"]			= "mysql_hostname";
+$CONFIG["db_dbname"]			= "mysql_db";
+$CONFIG["db_username"]			= "mysql_user";
+$CONFIG["db_password"]			= "mysql_pass";
+$CONFIG["db_collation"]			= "utf8_danish_ci";
+$CONFIG["db_tblprefix"]			= "";
+$CONFIG["db_charset"]			= "utf8";
+$CONFIG["db_pagestable"]		= "pages";
+$CONFIG["db_resourcestable"]		= "resources";
+$CONFIG["db_elementstable"]		= "elements";
+$CONFIG["db_templatetable"]		= "templatepresets";
+$CONFIG["db_productstable"]		= "products";
+$CONFIG["db_userstable"]		= "users";
+$CONFIG["db_sessionstable"]		= "sessions";
+$CONFIG["includes"]			= $CONFIG['document_root']."include/";
+$CONFIG["lib"]				= $CONFIG['document_root']."lib/";
+$CONFIG["templates"]			= $CONFIG['document_root']."db_templates/";
+$CONFIG["icons"]			= "/oocms_demo/ico/";
+$CONFIG["graphics"]			= "/oocms_demo/gfx/";
+$CONFIG["fileadmin"]			= "/oocms_demo/fileadmin/";
+$CONFIG["opendocprefix"]		= "/oocms_demo/?OpenDoc";
+$CONFIG["openprodprefix"]		= "/oocms_demo/?OpenProd";
+$CONFIG["editdocprefix"]		= "/oocms_demo/admin/?EditDoc&action=page";
+?>

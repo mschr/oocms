@@ -1,0 +1,518 @@
+html, body {
+	height: 100%;
+}
+body.ui {
+	margin: 0;
+	padding: 0;
+	background-color: #4682b4;
+/*	background-image:url(../gfx/backgroundMainImage.jpg);
+	background-repeat: repeat-x;
+	background-position: -800px -200px;*/
+/*	height: 100%;
+
+*/
+	min-height: 800px;
+	position:relative;
+	/*	background-color: #FdF9Fd; */
+	/*font-family: verdana;*/
+}
+/************ 
+
+	Wrappers n graphics
+
+*/
+#bodyWrap, #footWrap {
+	position: relative;
+	width:100%;
+}
+#headWrap {
+	position: absolute;
+	width:100%;
+	position: absolute;
+	top:0;
+	left:0;
+	height: 183px;
+	background: transparent url(../gfx/logo-bg.png) repeat-x scroll 0 0;
+	padding: 0;
+	margin: 0;
+}
+#bodyWrap {
+	margin: 0 auto;
+	min-height: 300px;
+	width: 900px;
+}
+#footWrap {
+	/*min-height: 65px;*/
+	padding-top:35px;
+}
+#footWrap .historyContainer {
+	margin-bottom: 4px;
+	text-align:center;
+	vertical-align:middle;
+	width:100%;
+}
+.LowerGraphicsLayer {
+	background: transparent url(../gfx/footer-bg.png) repeat-x scroll bottom left;
+	height: 96px; 
+	z-index: -1;
+	position: absolute;
+	top:0;
+	left:0;
+	width: 100%;
+}
+#footWrap .LowerGraphicsLayer div.edge {
+	/*background: url(../gfx/footer-edge.png) repeat-x;*/
+	height: 45px;
+	margin-right: 194px;
+}
+#footWrap .LowerGraphicsLayer div.right {
+	/*background: url(../gfx/footer-right.png) no-repeat; */
+	height: 45px; 
+	width: 194px;
+	float:right;
+}
+/************ 
+
+	Positioning 
+
+*/
+#colWrapper {
+	position:relative;
+	overflow-x: visible;
+}
+.leftCol {
+	float: left;
+	width: 245px;
+	position: relative;
+	padding-top: 145px;
+	min-height: 340px;
+	z-index:10;
+}
+* html .leftCol {
+	min-height: 340px;
+}
+.rightCol {
+	position:relative;
+	float: right;
+	overflow-x: visible;
+	width: 245px;
+	padding-top: 90px;
+	padding-left: 8px;
+	z-index:10;
+}
+.centerCol {
+	margin-left: 245px;
+	margin-right: 245px;
+/*	margin: 0 auto;*/
+	position: relative;
+	padding: 65px 250px 5px 65px;
+}
+
+/************ 
+
+	Top Menu 
+
+*/
+#tocTable {
+	-moz-background-clip:border;
+	-moz-background-inline-policy:continuous;
+	-moz-background-origin:padding;
+	background:transparent url(../gfx/menubg-rep.gif) repeat-x scroll 0 0;
+	margin: 0 auto
+}
+#tocTable div {
+	-moz-background-clip:border;
+	-moz-background-inline-policy:continuous;
+	-moz-background-origin:padding;
+	background:transparent url(../gfx/menubg-left.gif) no-repeat scroll 0 0;
+}
+#tocTable div div {
+	-moz-background-clip:border;
+	-moz-background-inline-policy:continuous;
+	-moz-background-origin:padding;
+	background:transparent url(../gfx/menubg-right.gif) no-repeat scroll right top;
+	height:40px;
+}
+#tocTable div div div {
+	-moz-background-clip:border;
+	-moz-background-inline-policy:continuous;
+	-moz-background-origin:padding;
+	background:transparent url(../gfx/transparent.gif) repeat scroll 0 0;
+	height:auto;
+}
+
+#tocBox {
+	text-align: center;
+	vertical-align: middle;
+}
+/*
+.shade-tb{ position:absolute; bottom: 0; left: 0;border-bottom:1px solid rgb(221,219,210);height:1px; }
+.shade-lr{ position:absolute; top: 0; border-right:3px solid rgb(225,235,222);width:1px; }
+.shadeRight-r1 { margin-bottom: 1px ; right:0px}
+.shadeRight-r2 { margin-bottom: 2px; right:-1px}
+.shadeRight-r3 { margin-bottom: 3px; right:-2px}
+.shadeBottom-r1 { margin: 0 1px; bottom:4px}
+.shadeBottom-r2 { margin: 0 2px; bottom:3px}
+.shadeBottom-r3 { margin: 0 3px; bottom:2px}
+.shadeBottom-r4 { margin: 0 4px; bottom:1px}
+*/
+#menu {
+	z-index: 15;
+}
+
+#menu ul, #menu ol {
+	/*margin-bottom: 20px;*/
+	line-height: 30px;
+	margin-left: 3em;
+}
+#menu {
+	position: relative; 
+	margin: 0 auto;
+}
+
+#menu ul {
+	margin: 0;
+	padding-left: 8px;
+	padding-right: 8px;
+	list-style: none;
+}
+
+#menu li {
+	float:left;
+	display:block;
+	background-image:url(../gfx/menubg-sep.gif);
+	background-repeat:no-repeat;
+	background-position: right 10px;
+	margin: 3px 0 0;
+	padding-left: 4px;
+	padding-right: 8px;
+}
+
+#menu a {
+
+	/*-moz-border-radius-bottomleft:8px;
+	-moz-border-radius-bottomright:8px;*/
+	/*border-bottom:3px inset black;
+	border-left:3px inset black;
+	border-right:3px inset black;*/
+	text-align:center;
+/*	display: block;
+	float: left;
+	padding: 4px 6px;
+*/
+	text-transform: lowercase;
+	text-decoration: none;
+	text-align: center;
+	font-size: 14px;
+	color: black;
+	white-space: nowrap;
+	padding-bottom: 2px;
+
+}
+#menu a:hover {
+	color: whiteSmoke;
+	background: transparent url(../gfx/menubg-hover.png) no-repeat center 16px;
+}
+
+#menu .active a {
+	color: #FFFFFF;
+}
+#menu .active a:hover {
+	color: whiteSmoke;
+}
+
+/************
+
+	Contents Pane
+
+*/
+
+
+#contentswrap {
+	font-size: 10pt;
+	font-family: sans serif;
+	margin-top: 10px;
+	text-align:left;
+ 	min-height: 255px; 
+}
+#contentsWrap h1 {
+	margin: 17px 0 26px 0;
+}
+#contentsWrap p{
+	margin-top: 7px;
+	margin-bottom: 7px;
+
+}
+.contentsBody {
+	background:transparent url(../gfx/_back.png) no-repeat scroll left top;
+	min-height:90px;
+	width:900px;
+	display:block;
+	margin-bottom:85px;
+	position:relative;
+}
+.contentsInner {
+	background:transparent url(../gfx/back.png) no-repeat scroll left bottom;
+	height:auto !important;
+	margin-bottom:25px;
+	position:relative;
+	top: 15px;
+	padding:0 20px 20px 10px;
+}
+.botPrio {
+	padding-top: 8px;
+	padding-bottom: 24px;
+}
+#doc_title {
+	display: none;
+}
+/*
+
+	Sub Menu
+
+*/
+.subToc { 
+	position: relative; 
+}
+/* spaced equally to body right margin */
+.subToc .dijitTreeLabel { 
+	font-family:Verdana; 
+	color: #FFF;
+	white-space:normal;
+	font-weight:700;
+	font-size:14px
+}
+.subToc .dijitTreeIcon { 
+	height:auto !important; width: auto !important 
+}
+
+.subToc .dijitTreeExpando /*, .subToc .dijitTreeNode*/{
+	background:none transparent !important;
+	display:none
+}
+.subToc .dijitTreeNode {
+	background:none transparent !important;
+}
+.subToc .dijitTreeNodeSelected {
+	background-color: #00B050;
+}
+
+.subToc .dijitTreeNodeHover {
+	background-color: #85C2FA;
+}
+.subToc .dijitTreeNodeHover .dijitTreeLabel {
+	color: #EC1A48;
+}
+.subToc .dijitTreeLabel {
+	color: #BABABA;
+	font-size: 10pt;
+}
+.dijitTreeNodeSelected .dijitTreeLabel {
+		color: whiteSmoke;
+}
+.subToc .dijitTreeRow {
+	margin-right: 5px;
+}
+* html .subToc .OoCmSBorderTable,
+.subToc .OoCmSBorderTable {
+	min-width: 170px;
+	max-width: 200px;
+}
+.subToc .borderTableFill {
+	background-color: #F7F7F4;
+}
+/*
+.dijitTreeExpandoLeaf, .dijitTreeExpandoClosed, .dijitTreeExpandoOpened {
+background: transparent none !important;
+}
+.dijitTreeExpando {  height:0 !important; width: 0 !important }
+
+##.dijitTreeIsRoot img.dijitTreeExpando { width: 100px }
+.dijitTreeExpando {  height:0 !important; width: 0 !important }
+*/
+
+/************
+
+	BreadCrumbs
+
+*/
+
+#crumbwrap {
+	/*1	display: inline-table; */
+}
+td.crumb a {
+	text-decoration:  underline;
+	white-space:nowrap;
+}
+#breadcrumbs {
+	height:28px;
+	line-height:16px;
+	font-family:verdana;
+	width:459px;
+}
+
+#breadcrumbs .dojoxScrollHelper {
+	height:2px;
+}
+#breadcrumbs .helperInner {
+	line-height:2px;
+}
+/*
+table.crumbScroll td.crumb {
+	padding: 0 4px;
+	vertical-align: bottom;
+	line-height: 27px;
+}
+
+*/
+.crumbsRight, .crumbsLeft, .crumbsCenter {
+	float:left;
+	height: 28px;
+}
+.crumbsRight, .crumbsLeft {
+	width: 10px;
+}
+.crumbsLeft {
+	background: url(../gfx/path-left.png) no-repeat 0 0;
+}
+.crumbsRight {
+	background: url(../gfx/path-right.png) no-repeat 0 0;
+}
+.crumbsCenter {
+	background: url(../gfx/path-center.png) repeat-x 0 0;
+}
+/*
+* html #footWrap { min-height: 65px; }
+* html #headWrap { min-height: 65px; }
+* body { min-width: 1024px; overflow:auto }
+*/
+
+/**********
+
+	Footer
+
+*/
+
+.footerNavigation {
+	text-align: center;
+}
+.footerNavigation address {
+	font-size: small;
+}
+.footerNavigation .navlinks {
+	padding: 2px;
+	font-size: 12px;
+	margin: 0;
+	font-family: arial,verdana, sans serif, times new roman;
+}
+.footerNavigation .navlinks li{
+	display: inline;
+}
+/*
+.IEFixedToolbar {
+	position:absolute;
+	top: expression(eval((document.documentElement||document.body).scrollTop));
+}
+*/
+#submenuHeader {
+	width: 100%;
+}
+.mediaResource * {
+	padding:0;
+	margin: 0;
+}
+.attachMenu {
+	background: white;
+	margin:2px;
+}
+
+
+/*--------------------------------------------*/
+/*        BlendBorders                        */
+/*--------------------------------------------*/
+/* Corners */
+
+.borderHidden {
+	display:none;
+}
+.borderUL,.borderUR,.borderBL,.borderBR,
+.borderFillB,.borderFillU
+{
+	line-height: 10px !important;
+}
+.borderUL,.borderUR,.borderBL,.borderBR,
+.borderFillB,.borderFillU,.borderFillL,.borderFillR
+{
+	padding: 0px;
+	margin: 0px;
+}
+
+.borderUL {
+	background-image: url(../gfx/corners2x2.png);
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+}
+.borderUR {
+	background-image: url(../gfx/corners2x2.png);
+	background-repeat: no-repeat;
+	background-position: -10px 0px;
+}
+.borderBL{
+	background-image: url(../gfx/corners2x2.png);
+	background-repeat: no-repeat;
+	background-position: 0px -10px;
+}
+.borderBR {
+	background-image: url(../gfx/corners2x2.png);
+	background-repeat: no-repeat;
+	background-position: -10px -10px;
+}
+
+/* Edges */
+
+.borderFillU {
+	background-image: url(../gfx/fill-tb.png);
+	background-repeat: repeat-x;
+	width: 100%;
+	background-position: 0px 0px;
+}
+.borderFillB {
+	background-image: url(../gfx/fill-tb.png);
+	background-repeat: repeat-x;
+	background-position: 0px -10px;
+	width:100%;
+}  
+.borderFillL {
+	background-image: url(../gfx/fill-lr.png);
+	background-repeat: repeat-y;
+	background-position: 0px 0px;
+}
+.borderFillR{
+	background: url(../gfx/fill-lr.png);
+	background-repeat: repeat-y;
+	background-position: -10px 0px
+}
+.borderTableFill {
+	padding: 4px 0px 4px 6px;
+}
+
+#tocBox .borderUL,
+#tocBox .borderUR,
+#tocBox .borderBL,
+#tocBox .borderBR,
+#tocBox .borderUL,
+.subToc .borderUL,
+.subToc .borderUR,
+.subToc .borderBL,
+.subToc .borderBR,
+.subToc .borderUL {
+	background-image: url(../gfx/blue-corners2x2.png);
+}
+#tocBox .borderFillL, #tocBox .borderFillR, .subToc .borderFillL, .subToc .borderFillR {
+	background-image : url(../gfx/blue-fill-lr.png);
+}
+#tocBox .borderFillU , #tocBox .borderFillB, .subToc .borderFillU , .subToc .borderFillB {
+	background-image : url(../gfx/blue-fill-tb.png);
+}
+
+

@@ -1,0 +1,51 @@
+/* 
+    Document   : sitemap
+    Created on : 18-10-2009, 23:37:56
+    Author     : mschr
+    Description:
+        Purpose of the stylesheet follows.
+*/
+html, head, body { padding: 0; margin: 0; }
+.outputWrap {
+	margin: 0 auto;
+	margin-bottom: 20px;
+}
+.outputWrap h1 {
+	margin-top: 0;
+	padding-top: 75px;
+}
+.outputTable {
+	background-color: #D7E9F0;
+	border: 1px dashed blue;
+
+}
+.outputHead th {
+	text-align: left;
+	background-color: lightGray;
+}
+.outputIndentation_0 {
+	padding: 2px;
+	padding-left: 0;
+	margin-top: 4px;
+}
+.outputIndentation_1 {
+	padding: 2px;
+	padding-left: 10px;
+	margin-top: 4px;
+}
+.outputIndentation_2 {
+	padding: 2px;
+	padding-left: 20px;
+	margin-top: 4px;
+}
+.outputIndentation_3 {
+	padding: 2px;
+	padding-left: 30px;
+	margin-top: 4px;
+}
+.outputIndentation_4 {
+	padding: 2px;
+	padding-left: 40px;
+	margin-top: 4px;
+}
+

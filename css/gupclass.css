@@ -1,0 +1,124 @@
+body {
+	color: #3f3f3f;
+}
+.tableWrapper {
+	float: right;
+	max-width: 45%;
+	max-height: 300px;
+}
+#uploadCont { position:relative; }
+#uploadStatus  {
+	display:block;
+	height: 90%;
+	overflow-y:auto;
+	overflow-x:hidden;
+	position:absolute;
+	top:0;
+	right:3px;
+	width: 350px;
+	background-color: transparent;
+	border-collapse: collapse;
+	border-bottom: 1px solid #e8e8e8;
+	border-bottom: 2px dashed #e8e8e8;
+}
+#uploadStatus td {
+	padding: 5px 20px 5px 20px;
+	border-top: 1px solid #e8e8e8;
+	font-size: 12px;
+}
+#uploadStatus td.ipad {
+	padding-top: 25px !important;
+}
+#uploadStatus .fileStatBar {
+	height: 15px;
+	width: 0px;
+	background-color: orange;
+}
+#uploadStatus tr.failed .fileStatBar {
+	background-color: red;
+}
+.fileStatBarWrapper {
+	width: 100px;
+	background-color: #f8f8f8;
+}
+#dropZone {
+	width: 310px;
+	height: 131px;
+	background: url("../gfx/gearsicons/dropbox.png") top left no-repeat;
+	margin-bottom: 20px;
+}
+#dropZone.hover {
+	background: url("../gfx/gearsicons/dropboxHover.png") top left no-repeat;
+}
+#preloader {
+	display: none;
+}
+
+#consoleWrapper {
+	display: none;
+	background-color: #f8f8f8;
+	border: 1px solid #e8e8e8;
+	margin-top: 15px;
+}
+
+#thumbOut {
+	min-height: 120px;
+	max-height: 375px;
+
+}
+#thumbOut .thumb {
+	float: left;
+	margin: 20px 0px 0px 20px;
+	height: 120px;
+}
+#thumbOut img {
+	border: none;
+	padding: 10px;
+	border: 1px solid #e8e8e8;
+	background-color: white;
+}
+#returnSpace {
+	/*display: none;*/
+}
+span.iconSmall {
+	display:block;
+	height:48px;
+	width:48px;
+	/* generic image */
+	background: transparent url(../gfx/gearsicons/any-48x48.png) no-repeat 0 0;
+}
+span.iconBig {
+	display:block;
+	height:128px;
+	width:128px;
+	/* generic image */
+	background: transparent url(../gfx/gearsicons/any-128x128.png) no-repeat 0 0;
+}
+.iconSmall-txt {background-image: url(../gfx/gearsicons/text-48x48.png) !important;}
+.iconSmall-pdf {background-image: url(../gfx/gearsicons/pdf-48x48.png) !important;}
+.iconSmall-avi,.iconSmall-mpeg,.iconSmall-mpg,.iconSmall-ogg,.iconSmall-wmv,.iconSmall-flv {background-image: url(../gfx/gearsicons/movie-48x48.png) !important;}
+.iconSmall-wav,.iconSmall-mp3,.iconSmall-ra {background-image: url(../gfx/gearsicons/sound-48x48.png) !important;}
+.iconSmall-doc, .iconSmall-odt, .iconSmall-rtf {background-image: url(../gfx/gearsicons/word-48x48.png) !important;}
+.iconSmall-xsl, .iconSmall-ods {background-image: url(../gfx/gearsicons/chart-48x48.png) !important;}
+.iconSmall-rar, .iconSmall-zip, .iconSmall-gz, .iconSmall-bz2, .iconSmall-tar, .iconSmall-7z {background-image: url(../gfx/gearsicons/chart-128x128.png) !important;}
+.iconBig-txt {background-image: url(../gfx/gearsicons/text-128x128.png) !important;}
+.iconBig-pdf {background-image: url(../gfx/gearsicons/pdf-128x128.png) !important;}
+.iconBig-avi,.iconBig-mpeg,.iconBig-mpg,.iconBig-ogg,.iconBig-wmv,.iconBig-flv {background-image: url(../gfx/gearsicons/movie-128x128.png) !important;}
+.iconBig-wav,.iconBig-mp3,.iconBig-ra {background-image: url(../gfx/gearsicons/sound-128x128.png) !important;}
+.iconBig-doc, .iconBig-odt, .iconBig-rtf {background-image: url(../gfx/gearsicons/word-128x128.png) !important;}
+.iconBig-xsl, .iconBig-ods {background-image: url(../gfx/gearsicons/chart-128x128.png) !important;}
+.iconBig-rar, .iconBig-zip, .iconBig-gz, .iconBig-bz2, .iconBig-tar, .iconBig-7z {background-image: url(../gfx/gearsicons/chart-48x48.png) !important;}
+.clear {clear: both;}
+#footer {
+	clear: both;
+	background-color:#EFEFCF;
+	border-top:3px solid green;
+	padding: 5px 10px;
+	text-align: right;
+	font-size: 11px;
+	margin-top: 20px;
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	left: 0px;
+}

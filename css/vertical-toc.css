@@ -1,0 +1,111 @@
+/* 
+    Document   : horizontal-toc
+    Created on : 10-05-2009, 16:53:00
+    Author     : mschr
+    Description:
+        Purpose of the stylesheet follows.
+*/
+body {
+	margin-top: 0;
+	margin-left: 0;
+	margin-right: 0;
+	margin-bottom: 0;
+}
+a:link {
+	text-decoration: none;
+	color:black;
+	border-width:0;
+	outline-width:0;
+}
+a:visited {
+	text-decoration: none;
+	color:black;
+	border-width:0;
+	outline-width:0;
+}
+a:active {
+	text-decoration: none;
+	color:black;
+	border-width:0;
+}
+a:hover { 
+	color:blue;
+}
+
+a.image {
+	text-decoration:none;
+	background-color:#96a6ff;
+	color:#96a6ff;
+}
+img {
+	border : 0;
+}
+a.TitleLink {
+	color: white;
+	text-decoration: none;
+}
+a.itemref {
+	z-index: 50;
+}
+div.item-c, div.subitem-c, div.subsubitem-c {
+	overflow: hidden;
+	line-height: 16px;
+	font-size: 14px;
+	font-family: Trebuchet MS, verdana;
+	}
+div.item-c a {
+	text-decoration: underline;
+	font-weight : 700;
+	color: inherit;
+}
+
+div.subitem-c a, div.subsubitem-c a{
+	color: inherit;
+	cursor: pointer;
+	font-weight :  500;
+	padding-left: 3px;
+	text-decoration: none;
+}
+
+div.item-c {
+	text-align: center;
+	margin-right: 8px;
+	margin-left: 8px;
+	border-width: 3px;
+	border-style: inset;
+	border-color: black;
+	width: 140px;
+	-moz-border-radius: 4px;
+}
+
+div.subitem-c { 
+	margin-left: 8px;
+	margin-right: 8px;
+	border-width: 2px;
+	border-style: groove;
+	border-color: black;
+	text-align: center;
+	-moz-border-radius: 5px;
+}
+
+div.subsubitem-c { 
+	margin-left: 8px;
+	margin-right: 8px;
+	border-width: 2px;
+	width: 100px;
+	border-style: groove;
+	border-color: gray;
+	-moz-border-radius: 7px;
+}
+
+
+
+.tocBox {
+	border : 1px solid rgb(130, 130, 130);
+	-moz-border-radius: 5px;
+	background-image: url(../gfx/toc-gradient.png);
+	background-repeat: no-repeat;
+	width :/*MENU WIDTH*/ 159px;
+	padding:4px 5px 6px 0;
+}
+

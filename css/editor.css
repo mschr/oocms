@@ -1,0 +1,377 @@
+/* 
+Document   : editor
+Created on : 07-05-2009, 23:03:41
+Author     : mschr
+Description:
+Purpose of the stylesheet follows.
+@import "/dojo_tk/dijit/themes/dijit.css";
+@import "/dojo_tk/dijit/themes/nihilo/nihilo.css";
+
+*/
+
+html, body {
+	margin:0;
+	padding:0;
+	height: 100%;
+	width: 100%;
+}
+
+span.preview {
+
+	display: none;
+	position: absolute;
+	width: 350px;
+	color: #51A96B;
+	background-color:#ABC6DD;
+	padding:8px;
+	border:2px outset gray;
+	margin-top:-18px;
+	margin-left:12px;
+	z-index:999;
+	white-space: normal;
+	overflow:auto;
+}
+pre.preview {
+
+	display: none;
+	position: absolute;
+	width: 350px;
+	color:lightYellow !important;
+	background-color:#535353;
+	padding:8px;
+	border:2px outset gray;
+	margin-top:-18px;
+	margin-left:12px;
+	z-index:999;
+}
+.dijitTreeNodeSelected {
+	background-color: lightGray;
+}
+table.simpleSkin td {
+	border:none;
+	padding:1px;
+}
+.urlformat { font-size: small !important; }
+.mceButtonStyle input { padding:0; }
+div.editorWrap {
+	background: #E5EFFD none repeat scroll 0 0;width:100%;font-size: 16px; font-family: georgia;
+}
+div.item-c { width: 100% !important; }
+.dijitButtonText {
+	position: relative;
+	top: 1px;
+	font-family:georgia;
+	font-size:14px;
+}
+.dijitButtonHover .dijitButtonText {
+	color: rgb(60,40,10)
+}
+.dijitButtonNode {
+	border-color:#A0BCE2 #E8F0F7 #A0BCE2 #BECDDB !important;
+	border-style: outset !important;
+	border-width: 1px !important;
+	-moz-border-radius: 2px;
+	height: 20px;
+	background: transparent url(../gfx/dojoButton.png) repeat-x scroll left top  !important;
+}
+.dijitButtonHover .dijitButtonNode {
+	background: transparent url(../gfx/dojoButtonHover.png) repeat-x scroll left top !important;
+}
+/*
+.dijitTooltipContents {
+	max-width: 365px;
+	font-family: georgia;
+	background-color: rgb(83, 83, 83) !important;
+	color: lightYellow;
+	white-space:normal;
+	-moz-border-radius: 2px;
+	font-size: 12pt;
+}
+*/
+.dijitTooltipRight .dijitTooltipConnector {
+	background:transparent url(/OoCmS/dojo_tk/OoCmS/resources/tooltipConnectorLeft.png) !important;
+}
+.dijitTooltipLeft .dijitTooltipConnector {
+	background:transparent url(/OoCmS/dojo_tk/OoCmS/resources/tooltipConnectorRight.png) !important;
+}
+table.sample {
+	border-width: 0;
+	border-spacing: 2px;
+	border-style: none;
+	border-collapse: collapse;
+}
+table.sample td {
+	border-width: 1px;
+	padding: 7px;
+	border-style: solid;
+	border-color: #ccc;
+}
+
+table.sample thead {
+	background-color: #535353;
+	color: whiteSmoke;
+}
+table.meta td, table.clean td, table.simpleSkin td {
+	border: none transparent;
+	padding: 0;
+}
+
+.inactive {
+	color: rgb(125,125,125);
+	font-size: small;
+}
+
+
+/* actions */
+.areaToggle a {
+	font-family:verdana;
+	font-size:x-small;
+	text-decoration:none;
+	vertical-align:top;
+}
+.areaToggle a.open {
+	color:cyan;
+}
+.areaToggle a.hidden {
+	color:lightGray;
+}
+div.action-right {
+	width: 5px;
+	float:left;
+	background:transparent url(../gfx/action-lr.png) no-repeat scroll -5px 0%;
+}
+div.action-left {
+	width: 5px;
+	float:left;
+	background:url(../gfx/action-lr.png) no-repeat scroll 0% 0%;
+}
+div.action-bg {
+	height:17px;
+	float:left;
+	background:url(../gfx/action-bg.png)
+}
+.action-bg vertical {
+	width: 180px;
+}
+.action-delim-vertical {
+	clear:both;
+}
+.action-delim-horizontal {
+	float:left;
+	width: 4px;
+}
+span.areaToggle {
+	padding-left: 4px;
+	padding-right: 4px;
+}
+#DocumentHead_parent tr.mceFirst {
+	background-attachment:scroll;
+	background-color:transparent;
+	background-image:url(../../gfx/editor-head-selected.png);
+	background-position:right bottom;
+	background-repeat:no-repeat;
+}
+#DocumentBody_parent tr.mceFirst {
+	background-attachment:scroll;
+	background-color:transparent;
+	background-image:url(../../gfx/editor-body-selected.png);
+	background-position:right bottom;
+	background-repeat:no-repeat;
+}
+#DocumentFoot_parent tr.mceFirst {
+	background-attachment:scroll;
+	background-color:transparent;
+	background-image:url(../../gfx/editor-foot-selected.png);
+	background-position:right bottom;
+	background-repeat:no-repeat;
+}
+/** Type/Form Choice (and errorpage) classes */
+div.choices div.line, div.error div.line {
+	height: 235px;
+	background-repeat:no-repeat;
+	background-position:left bottom;
+	border: 2px outset LightBlue;
+	margin: 2px 200px;
+	padding: 0;
+	cursor: pointer;
+}
+div.error .notifyanchor {
+	padding-left: 12px;
+	margin: 4px 8px;
+	background: transparent url(../gfx/orange_arrow.png) no-repeat left center;
+}
+div.choices div.formChoice, div.error div.notify {
+	position: relative;
+	color: blue;
+	left: 250px;
+	top: 30px;
+	font-size: 16pt;
+	font-family: tahoma,verdana;
+	text-transform: capitalize;
+}
+div.formChoice .description, div.error .description {
+	color: gray;
+	padding-right:258px;
+	padding-left: 30px;
+	font-family:times New Roman;
+	font-size:13pt;
+	text-decoration: none !important;
+	text-transform: none;
+
+}
+div.editorWrap {
+	border: 3px inset black;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	margin: 0px 0;
+}
+
+div.popup-notify, div.popup-error, div.popup-selectpage{
+	background-attachment:scroll;
+	background-color:transparent;
+	background-position:right 20px;
+	background-repeat:no-repeat;
+
+	padding-bottom:8px;
+	padding-top:8px;
+	padding-left:20px;
+	padding-right:20px;
+	min-height: 256px;
+}
+div.popup-notify { background-image:url(../icons/glossy_3d_blue_orbs2_129.png) }
+div.popup-selectpage{ background-image:url(../icons/glossy_3d_blue_orbs2_051.png) }
+div.popup-error { background-image:url(../icons/glossy_3d_blue_orbs2_069.png) }
+div.popup-buttonbar {
+	width:100%;
+	text-align:right;
+	position:absolute;
+	bottom: 20px;
+	right:20px;
+}
+p.popup-notify{
+	font-family:verdana;
+	font-size:x-small;
+	width:218px
+}
+p.popup-selectpage{
+	font-family:verdana;
+	font-size:x-small;
+	width:218px;
+	z-index:10
+}
+div.popup-selectpage div.popup-buttonbar { z-index:1 }
+div.popup-selectpage .dijitTreeRow { height:16px }
+div.popup-selectpage .dijitTreeLabel {
+	font-size: 9px;
+	font-family: verdana;
+	}
+div.popup-selectpage p.popup-notify {
+	width: 244px;
+	max-height: 300px;
+}
+.urlformat {
+	color: #0d017f;
+	font-style: italic;
+	font-size: small;
+}
+/* mceButton-ish metadata table styling */
+tbody.mceLookFeel div.mceButtonStyle {
+	background-color:#cadbee;
+	border-top: 1px solid #a0bce2;
+	border-bottom: 1px solid #a0bce2;
+	border-left: 1px solid #e8f0f7;
+	border-right: 1px solid #becddb;
+	margin: 2px 0px;
+	height: 46px;
+	padding: 4px;
+}
+tbody.mceLookFeel div.last {
+	margin-right: 12px;
+	border-right: 1px solid #a0bce2;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topright: 3px;
+	border-radius-topright: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	border-radius-bottomright: 3px;
+}
+tbody.mceLookFeel div.first {
+	margin-left: 12px;
+	border-left: 1px solid #a0bce2;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-radius-bottomleft: 3px;
+	-webkit-border-top-left-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	border-radius-topleft: 3px;
+}
+
+tbody.mceLookFeel label {
+	padding-bottom: 4px;
+	padding-left: 4px;
+	font-size: 15px;
+}
+
+.mceButtonStyle input {
+	padding: 2px;
+	font-size: small;
+}
+tbody.mceLookFeel td {
+	padding:0;
+	margin:0;
+	font-size: 14px;
+	/*width: 25% !important;*/
+}
+tbody.mceLookFeel span.dateformat {
+	font-size: 0.95em;
+	color: #0d017f;
+}
+tbody.mceLookFeel span.urlformat {
+	color: #0d017f;
+	font-style: italic;
+}
+tr.mceFirst div.mceButtonStyle {
+	margin-top: 7px;
+}
+tr.mceLast div.mceButtonStyle {
+	margin-bottom: 7px;
+}
+tbody.mceLookFeel ul.mceLinkList {
+	background-color:#cadbee;
+/*	border-top: 1px solid #a0bce2;*/
+	border-bottom: 1px solid #a0bce2;
+	border-left: 1px solid #e8f0f7;
+	border-right: 1px solid #becddb;
+	margin: 0 4px 4px;
+	height: 20px;
+	padding: 0;
+	padding-top: 4px;
+
+}
+ul.mceLinkList a {
+	white-space: no-wrap;
+	text-decoration: none;
+	margin-left: 15px;
+	
+}
+ul.mceLinkList a img {
+	border: none;
+}
+tbody.mceLookFeel td.noBorder { border : 0px none }
+tbody.mceLookFeel ul.mceLinkList li {
+	display: inline
+}
+tbody.mceLookFeel tr.mceLast  ul.mceLinkList {
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-radius-bottomleft: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	border-radius-bottomright: 3px;
+	border-left:1px solid #A0BCE2;
+	margin-left:12px;
+}
+.noborder {
+	border: 0px none;
+}

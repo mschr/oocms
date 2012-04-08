@@ -1,0 +1,26 @@
+.actionBarButton1, .actionBarButton1 a, .actionBarButton1 img {
+	vertical-align:middle;
+}
+.actionBarButton1 {
+	border-style:none;
+	color:white;
+	font-weight:bold;
+	line-height:normal;
+	padding:0 8px;
+	text-align:center;
+	vertical-align:middle;
+	white-space:nowrap;
+	width:100%;
+}
+.actionBarButton1 a {color: white;}
+.actionBarButton1 td { padding: 0 !important; margin: 0 !important; border: none !important }
+.actionBarButton1 td.middle {background:transparent url(../gfx/button-mid.gif) repeat-x scroll 0 0;}
+.actionBarButton1 td.middle_h {background:transparent url(../gfx/button-mid-hover.gif) repeat-x scroll 0 0;}
+.actionBarButton1 td.left {background:transparent url(../gfx/button-l.gif) repeat-x scroll 0 0;}
+.actionBarButton1 td.left_h {background:transparent url(../gfx/button-l-hover.gif) repeat-x scroll 0 0;}
+.actionBarButton1 td.right {background:transparent url(../gfx/button-r.gif) repeat-x scroll 0 0;}
+.actionBarButton1 td.right_h {background:transparent url(../gfx/button-r-hover.gif) repeat-x scroll 0 0;}
+.actionBarButton1 td.middle, .actionBarButton1 td.middle_h {font-size:16px;padding:0 8px;}
+.actionBarButton1 td.left, .actionBarButton1 td.right, .actionBarButton1 td.left_h, .actionBarButton1 td.right_h 
+{font-size:1px;width:4px;height: 29px;}
+.actionText1 { font-family: Tahoma }
