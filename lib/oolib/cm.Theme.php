@@ -526,8 +526,6 @@ class Theme {
 										"admin/include/bootstrap.js"));
 		// add reset global stylesheet
 		$root->addChild(Node::create("comment", null, "Styles"))
-				  ->addChild(LinkTag::create("stylesheet", "{$CONFIG['css']}oocms.css", "text/css")
-							 ->addAttribute("media", "all"))
 				  ->addChild(LinkTag::create("stylesheet", "{$CONFIG['relurl']}" .
 										"admin/resources/admin.css", "text/css"))
 				  ->addChild(LinkTag::create("stylesheet", "{$CONFIG['dojoroot']}" .

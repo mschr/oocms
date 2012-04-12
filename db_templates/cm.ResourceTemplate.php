@@ -198,14 +198,14 @@ class Resource {
 
 	function create($pageid, $mime, $uri = null) {
 
-		$un = $_SERVER['REMOTE_USER'];
-		$alias = $this->generateAlias();
 		global $CONFIG;
+		global $user;
+		$alias = $this->generateAlias();
 		$sql = new SQL("admin");
 		$sql->doQuery("INSERT INTO `" . $CONFIG['db_resourcestable'] . "` (" .
 				  "`attach_id` ,`id` ,`creator` ,`created` ,`lasteditedby` ,`type` ,`mimetype` ,`uri` ,`alias`" .
 				  ") VALUES (" .
-				  "'$pageid', NULL , '$un', NOW(), '$un', 'include', '$type', '$uri', '$alias');");
+				  "'$pageid', NULL , '{$user->userid}', NOW(), '{$user->username}', 'include', '$type', '$uri', '$alias');");
 
 		$sql->doQuery("SELECT * FROM `" . $CONFIG['db_resourcestable'] . "` ORDER BY id DESC LIMIT 2");
 		if ($sql->errMessage() != "") {
@@ -248,12 +248,13 @@ class Resource {
 	function updateDb() {
 
 		global $CONFIG;
+		global $user;
+		fb($user);
 		$sql = new SQL("admin");
-		$un = $_SERVER['REMOTE_USER'];
 		$ok = $sql->doQuery("	UPDATE `" . $CONFIG['db_resourcestable'] . "` SET " .
 				  "`attach_id`='" . $this->attachId . "'," .
 				  "`media`='" . $this->media . "'," .
-				  "`lasteditedby`='" . $un . "'," .
+				  "`lasteditedby`='" . $user->username . "'," .
 				  "`type`='" . $this->type . "'," .
 				  "`mimetype`='" . $this->mimetype . "'," .
 				  "`uri`='" . $this->uri . "'," .

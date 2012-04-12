@@ -3,8 +3,14 @@ define(["dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/_base/connect",
+	"dojo/_base/xhr",
+	"dojo/_base/fx",
+	"dojo/dom",
 	"dojo/dom-style",
+	"dojo/dom-class",
 	"dojo/dom-geometry",
+	"dojo/dom-construct",
+	"dijit/registry",
 	"dojo/topic",
 	"dojo/dnd/common",
 	//	"dojo/date/locale",
@@ -22,7 +28,10 @@ define(["dojo/_base/declare",
 	"dijit/tree/ForestStoreModel",
 	"dojo/fx/easing",
 	"OoCmS/_treebase"
-	], function(declare,abstractcontroller,dlang, darray, dconnect, dstyle, ddomgeometry, dtopic, dndCommon,dndSource,treedndSource, dpopup, progressbar, toolbar, button, ttipdialog, combobox, writestore, memorystore, forestmodel){
+	], function(declare,abstractcontroller,dlang, darray, dconnect, dxhr, dfx, ddom,
+		dstyle, dclass, ddomgeometry, ddomconstruct, registry, dtopic, dndCommon,
+		dndSource, treedndSource, dpopup, progressbar, toolbar, button, ttipdialog,
+		combobox, writestore, memorystore, forestmodel, dfxeasing){
 		var numOrder = function(a,b) {
 			if(!b) return -1;
 			return parseFloat(a)-parseFloat(b);
@@ -184,32 +193,43 @@ define(["dojo/_base/declare",
 				this.store.save()
 
 			},
+			ignoreSetter: false,
 			onNewItem: function onNewItem(item, parentInfo) { /* allways sync store */
 				console.log(traceLog(this, arguments));
-				var sourceItem = /_TreeNode_/.test(item.id[0]) ? dijit.byId(item.id[0]).item : item,
+				var sourceItem = /_TreeNode_/.test(item.id[0]) ? registry.byId(item.id[0]).item : item,
+				srcstore = sourceItem._S,
 				type = sourceItem._S.getValue(sourceItem, "type"),
-				id = sourceItem._S.getValue(sourceItem, "id"),
-				comment = sourceItem._S.getValue(sourceItem, "comment", "");
+				comment = sourceItem._S.getValue(sourceItem, "comment", ""),
+				id = this.store.getValue(parentInfo.item, "id");
+				
+				if(item === sourceItem) {
+					console.error("Widget ID ["+item.id+"] of dropped item cannot be found");
+					return;
+				}
+				var oAttach = srcstore.getValue(sourceItem, "attachId", "").split(",");
+				// we will now make change to Resources-store and submit them
+				for(var i = 0; i < oAttach.length; i++) {
+					if(oAttach[i] == id) {
+						this.ignoreSetter = false;
+						return;
+					}
+				}
+				oAttach.push(id);
+				oAttach.sort(function(a,b) {
+					return parseInt(a) > parseInt(b);
+				})
+				srcstore.setValue(sourceItem, "attachId", oAttach.join(","));
+				srcstore.save();
+				this.store.revert();
+			//this.inherited(arguments);
 
-				var newItem = {
-					alias : sourceItem._S.getValue(sourceItem, "alias"),
-					type : sourceItem._S.getValue(sourceItem, "type")
-				} 
-				//				id: item._S.getValue(item, "id"),
-				//					attachId: item._S.getValue(item, "attachId"),
-				//					tocpos: item._S.getValue(item, "position"),
-				//					doctitle : item._S.getValue(item, "title"),
-				//					form: (item._S.getValue(item, "attachId") == "0" || item._S.getValue(item, "isdraft") == "1") ? 'page' : 'subpage',
-				//					partial: true
-				console.log(item, parentInfo)
-			//				this.store.save()
 			},
 			onSetItem : function onSetItem(/* item */ item, attribute, oldValue, newValue) {
 				console.log(traceLog(this, arguments));
 				// we implement this catch to avoid sending a submit for a node changing its children
 				// when an element receives new / more children, the element itself has nothing to change
 				// only new / changed child-elements must set attachId
-				if(attribute == "children") {
+				if(attribute == "children" || this.ignoreSetter) {
 					delete this.store._pending._modifiedItems[this.store.getValue(item, "id")]
 				} else 
 					console.log(item.title+'', attribute + ' changed from ' + oldValue + " to " + newValue)
@@ -217,12 +237,13 @@ define(["dojo/_base/declare",
 			}
 		});
 				
-		var PageSelectTree = declare("OoCmS._dndtree", [OoCmS._treebase],{
+		var PageSelectTree, _dndtree = PageSelectTree = 
+		declare("OoCmS._dndtree", [OoCmS._treebase],{
 			observers: [],
 			loaded: false,
 			initialized: false,
 			dndController: treedndSource,
-			modelObservers : [],
+			observers : [],
 			constructor: function constructor(args) {
 				window.docTree = this;
 				if(args.dndController) this.dndController = args.dndController;
@@ -235,8 +256,6 @@ define(["dojo/_base/declare",
 				this.inherited(arguments);
 				console.info(traceLog(this,arguments));
 				this.model.mDragController = this.dndController;
-				darray.forEach(this.modelObservers, dconnect.disconnect);
-				this.modelObservers=[];
 				if(typeof this.menu == "string")
 				{
 					switch(this.menu) {
@@ -297,11 +316,10 @@ define(["dojo/_base/declare",
 				return true;
 			}
 		})
-		var ResourceSelectTree = declare("OoCmS._restree", [PageSelectTree],{
+		var ResourceSelectTree = declare("OoCmS._restree", [_dndtree],{
 			observers: [],
 			loaded: false,
 			initialized: false,
-			modelObservers : [],
 			constructor: function constructor(args) {
 				window.resTree = this;
 				console.info(traceLog(this,arguments));
@@ -332,20 +350,20 @@ define(["dojo/_base/declare",
 			},
 			_saveCustom: function(saveCompleteCallback,saveFailedCallback) {
 				console.info(traceLog(this,arguments));
-				var item, 
+				var item, i 
 				batches = 0, progress = 0;
 				// count pending requests
-				for(var i in this._pending._deletedItems)
+				for(i in this._pending._deletedItems)
 					if(this._pending._deletedItems.hasOwnProperty(i))batches++;
-				for(var i in this._pending._modifiedItems)
+				for(i in this._pending._modifiedItems)
 					if(this._pending._modifiedItems.hasOwnProperty(i))batches++;
-				for(var i in this._pending._newItems)
+				for(i in this._pending._newItems)
 					if(this._pending._newItems.hasOwnProperty(i)) batches++;
 				
-				for(var i in this._pending._deletedItems) {
+				for(i in this._pending._deletedItems) {
 					if(this._pending._deletedItems.hasOwnProperty(i)) {
 						item = this._getItemByIdentity(i);
-						dojo.xhrPost({
+						dxhr.post({
 							url:gPage.baseURI + '/admin/save.php?delElement',
 							content:  {
 								id: this.getValue(item, "id"),
@@ -368,10 +386,10 @@ define(["dojo/_base/declare",
 						});
 					}
 				};
-				for(var i in this._pending._modifiedItems) {
+				for(i in this._pending._modifiedItems) {
 					if(this._pending._modifiedItems.hasOwnProperty(i)) {
 						item = this._getItemByIdentity(i);
-						dojo.xhrPost({
+						dxhr.post({
 							content: this.getSubmitValues(item),
 							url:gPage.baseURI + '/admin/save.php?EditDoc&id='+i,
 							load : function(res) {
@@ -394,35 +412,9 @@ define(["dojo/_base/declare",
 						});
 					}
 				};
-				for(var i in this._pending._newItems) {
+				for(i in this._pending._newItems) {
 					if(this._pending._newItems.hasOwnProperty(i))
 						console.log('newItem WTF?', this._pending._newItems[i]);
-				/*
-					dojo.xhrPost({
-						content: self.getValues(newItem),
-						url:gPage.baseURI + '/admin/save.php?EditDoc',
-						load : function(res) {
-							if(res.indexOf("SAVED") == -1) {
-								ctrl.notify("Fejl!", self.notifyTemplates.saveErr.replace("{RESPONSE}", res), [ {
-									id:'saveoption',
-									cb:function() {
-										self.create();
-									},
-									classes:'dijitEditorIcon dijitEditorIconSave'
-								}, {
-									id:'canceloption',
-									classes:'dijitEditorIcon dijitEditorIconUndo'
-								}
-								]);
-								return;
-							}
-							ctrl.notify("Oprettet!", self.notifyTemplates.saveSuccess, [ {
-								id:'canceloption',
-								classes:'dijitEditorIcon dijitEditorIconUndo'
-							} ]);
-						}
-					});
-				 */
 				};
 				saveCompleteCallback();
 
@@ -434,11 +426,115 @@ define(["dojo/_base/declare",
 				this.clearOnClose=	true;
 				this.url=				gPage.baseURI + '/openView/Resources.php?format=json';
 				this.urlPreventCache=true;
-				if(args) dojo.mixin(this, args);
+				if(args) dlang.mixin(this, args);
 			},
 			_saveCustom: function(saveCompleteCallback,saveFailedCallback) {
 				console.info(traceLog(this,arguments));
-				console.log(this._pending);
+				var item, i, batches = 0, progress = 0;
+				// count pending requests
+				for(i in this._pending._deletedItems)
+					if(this._pending._deletedItems.hasOwnProperty(i))batches++;
+				for(i in this._pending._modifiedItems)
+					if(this._pending._modifiedItems.hasOwnProperty(i))batches++;
+				for(i in this._pending._newItems)
+					if(this._pending._newItems.hasOwnProperty(i)) batches++;
+				
+				for(i in this._pending._deletedItems) {
+					if(this._pending._deletedItems.hasOwnProperty(i)) {
+						item = this._getItemByIdentity(i);
+						dxhr.post({
+							url:gPage.baseURI + '/admin/save.php?delElement',
+							content:  {
+								id: this.getValue(item, "id"),
+								type : 'include',
+								partial:true
+							},
+							load: function(res) {
+								dtopic.publish("notify/progress/" + 
+									(batches == ++progress ?"done":"loading"),{
+										maximum:batches, 
+										progress:progress
+									});
+								if(! /DELETED/.test(res)) {
+									dtopic.publish("notify/delete/error", "Fejl!", res, [ {
+										id:'canceloption',
+										classes:'dijitEditorIcon dijitEditorIconUndo'
+									}]);
+								}
+							} // load
+						});
+					}
+				};
+				for(i in this._pending._modifiedItems) {
+					if(this._pending._modifiedItems.hasOwnProperty(i)) {
+						item = this._getItemByIdentity(i);
+						dxhr.post({
+							content: {
+								partial: true,
+								form: 'include',
+								attachId: item._S.getValue(item, "attachId")
+							},
+							url:gPage.baseURI + '/admin/save.php?EditResource&id='+i,
+							load : function(res) {
+								dtopic.publish("notify/progress/" + 
+									(batches == ++progress ?"done":"loading"),{
+										maximum:batches, 
+										progress:progress
+									});
+								if(res.indexOf("SAVED") == -1) {
+									dtopic.publish("notify/save/error", "Fejl!", res, [ {
+										id:'canceloption',
+										classes:'dijitEditorIcon dijitEditorIconUndo'
+									}
+									]);
+									return;
+								}
+							}
+						});
+					}
+				};
+				for(i in this._pending._newItems) {
+					if(this._pending._newItems.hasOwnProperty(i)) {
+						var content = {}
+						for(var key in item) 
+							if(item.hastOwnProperty(key) && key.indexOf("_") != 0) 
+								content[key] = item._S.getValue(item, key);
+					}
+					dxhr.post({
+						content: content,
+						url:gPage.baseURI + '/admin/save.php?EditDoc',
+						load : function(res) {
+							if(res.indexOf("SAVED") == -1) {
+								dtopic.publish("notify/save/error", "Fejl!", res, [ {
+									id:'saveoption',
+									cb:function() {
+										alert('Understøttes desværre ikke');
+									},
+									classes:'dijitEditorIcon dijitEditorIconSave'
+								}, {
+									id:'canceloption',
+									classes:'dijitEditorIcon dijitEditorIconUndo'
+								}
+								]);
+								return;
+							}
+							dtopic.publish("notify/save/success", "Oprettet!", res, [ {
+								id:'canceloption',
+								classes:'dijitEditorIcon dijitEditorIconUndo'
+							} ]);
+						}
+					});
+				};
+				saveCompleteCallback();
+
+			},
+			onDeleteItem: function onDeleteItem(item) {
+				this.inherited(arguments);
+				this.store.save();
+			},
+			onNewItem: function onNewItem(item, parentInfo) {
+				this.inherited(arguments);
+				this.store.save();
 			}
 		});
 
@@ -457,11 +553,22 @@ define(["dojo/_base/declare",
 			},
 			unload: function unload() {
 				console.info(traceLog(this,arguments));
-				dojo.forEach(this.modelObservers, dojo.disconnect)
-				dojo.forEach(this.observers, dojo.disconnect)
+				
+				darray.forEach(this.modelObservers, dconnect.disconnect)
+				darray.forEach(this.observers, dconnect.disconnect)
+				darray.forEach(this._resourcedescription, function(w){
+					w.popup.destroyRecursive();
+					w.destroyRecursive();
+				});
 				this._toolbar.destroyRecursive();
 				this._pageselector.model.store.close()
 				this._pageselector.destroyRecursive();
+				this._resourceselector.model.store.close();
+				this._resourceselector.destroyRecursive();
+				this._toolbar.destroyRecursive();
+				this._pageselectortoolbar.destroyRecursive();
+				this._resourceselectortoolbar.destroyRecursive();
+
 			},
 			ready: function ready(funcObject /*(self)*/) {
 				var self = this,
@@ -475,7 +582,7 @@ define(["dojo/_base/declare",
 					return;
 				}
 				var _interval = setInterval(function() {
-					test = dijit.byId('resourceselectorTree');
+					test = registry.byId('resourceselectorTree');
 					if (eval(test)) { //does the object exist?
 						clearInterval(_interval);
 						console.info(traceLog(this,arguments));
@@ -491,27 +598,24 @@ define(["dojo/_base/declare",
 			},
 			startup: function startup() {
 				console.info(traceLog(this,arguments));
-
-				dojo.byId('pagetoolbarWrapper').appendChild(this.getToolbar().domNode);
+				ddom.byId('pagetoolbarWrapper').appendChild(this.getToolbar().domNode);
 				this.getPageSelector()./*placeAt('pageselector').*/startup();
 				this.getResourceSelector()./*placeAt('resourceselector').*/startup();
 				this.inherited(arguments);
 								
 			},
-			postCreate: function postCreate() {
-				console.info(traceLog(this,arguments));
-				dojo.style(this._pageframe.center, { 
-					border: '1px solid #D0D0D0'
-				});
-				this.inherited(arguments);
-			},
+			//			postCreate: function postCreate() {
+			//				console.info(traceLog(this,arguments));
+			//				this.inherited(arguments);
+			//			},
 			getToolbar : function getToolbar() {
 				console.info(traceLog(this,arguments));
 				if(this._toolbar) return this._toolbar
-				var bt, tb = this._toolbar = new dijit.Toolbar({}, "pagetoolbar");
+				var bt, tb = this._toolbar = new toolbar({id:'pageTreeToolbar'}, "pagetoolbar");
 				//				dojo.place('<span class="label dijitButtonText">Position</span>', tb.domNode, "last");
 				// TODO: phase out togglePosition as toolkit functionality
 				bt = new button({
+					id: 'pageTreeToolbar-up',
 					label: "Op",
 					showLabel: true,
 					onClick: dlang.hitch(this, function(){
@@ -520,9 +624,10 @@ define(["dojo/_base/declare",
 					}),
 					iconClass: "dijitArrowButtonInner"
 				});
-				dojo.addClass(bt.domNode, "dijitUpArrowButton")
+				dclass.add(bt.domNode, "dijitUpArrowButton")
 				tb.addChild(bt);
 				bt = new button({
+					id: 'pageTreeToolbar-down',
 					label: "Ned",
 					showLabel: true,
 					onClick: dlang.hitch(this, function(){
@@ -532,32 +637,10 @@ define(["dojo/_base/declare",
 					}),
 					iconClass: "dijitArrowButtonInner"
 				});
-				dojo.addClass(bt.domNode, "dijitDownArrowButton")
+				dclass.add(bt.domNode, "dijitDownArrowButton")
 				tb.addChild(bt);
-				//				dojo.place('<span class="label dijitButtonText">Relation</span>', tb.domNode, "last");
-				/*
-				bt = new dijit.form.Button({
-					label: "Flyt",
-					title: '\'Saml op\' et element ved dbl-klik, vælg et andet som \'mål\' ved alm. klik og Flyt kan derved anvendes til at ændre en sides \'beholder\'',
-					showLabel: true,
-					onClick: function moveOnclick(){
-						console.info(traceLog(this,arguments));
-						var newParentItem = ctrl._widgetInUse.focusItem;
-						var childItem = ctrl._widgetInUse.editItem;
-						var docTree = ctrl._widgetInUse.getPageSelector();
-						var store = docTree.model.store;
-						var oldParentItem, oldParent = store.getValue(childItem, 'attachId', '0');
-						if(oldParent == '0') oldParentItem = docTree.model.root;
-						else oldParentItem = store._getItemByIdentity(oldParent);
-						console.log('pasting, child - oldparent - newparent', childItem, oldParentItem, newParentItem)
-						docTree.model.pasteItem(childItem, oldParentItem, newParentItem, false);
-						return;
-					},
-					iconClass: "dijitIconDelete"
-				});
-				tb.addChild(bt);
-			 */				
 				bt = new button({
+					id: 'pageTreeToolbar-attach',
 					label: "Tilknyt",
 					title: 'Marker en ressource, vælg et dokument som \'mål\' ved alm. klik og Tilknyt vedhæfter derved produkter/ressourcer til valgte dokument',
 					showLabel: true,
@@ -569,13 +652,14 @@ define(["dojo/_base/declare",
 					iconClass: "dijitIconDelete"
 				});
 				tb.addChild(bt);
+
 				return this._toolbar;
 			},
 			getPageSelector: function getPageSelector() {
 				console.info(traceLog(this,arguments));
 				if(this._pageselector) return this._pageselector;
 				
-				var w, h = (this.getToolbar() ? dojo.getMarginBox(this._toolbar.domNode).h - 5: 23),
+				var w, h = (this.getToolbar() ? ddomgeometry.getMarginBox(this._toolbar.domNode).h - 5: 23),
 				queryArgs = {
 					attachId: '0', 
 					isdraft: '0'
@@ -583,8 +667,8 @@ define(["dojo/_base/declare",
 				sortKeys = [{
 					attribute:'position'
 				}];
-				console.log('height', h)
 				var tb = this._pageselectortoolbar = new toolbar({
+					id: 'pageselectorToolbar',
 					style:'height:'+h+'px;padding-right:5px'
 				}, "pageselectortbar");
 
@@ -603,11 +687,22 @@ define(["dojo/_base/declare",
 					}),
 					rootLabel : "Dokumenter",
 					id: 'pageselectorTree',
-					dndController: dijit.tree.dndSource,
+					dndController: treedndSource,
 					betweenThreshold: 3
 				}, 'pageselector');
-
-				w = new dijit.form.Button({
+				w = new button({
+					id: 'pageselectorToolbar-newresource',
+					label: "Opret ressource",
+					showLabel: true,
+					style: 'float: right',
+					iconClass: "OoCmSIconAsset OoCmSIconAsset-bin",
+					onClick: function() {
+						alert('todo')
+					}
+				})
+				tb.addChild(w);
+				w = new button({
+					id: 'pageselectorToolbar-update',
 					iconClass:"dijitIconDatabase",
 					showLabel: false,
 					title: 'DbFixup - indexér og sorter sideelementer i databasen',
@@ -616,13 +711,14 @@ define(["dojo/_base/declare",
 				//   iconClass: "dijitEditorIcon dijitEditorIcon"+label
 				});
 				tb.addChild(w);
+
 				this._pageselector.model.store.fetch({
 					query: queryArgs,
 					sort: sortKeys
 				});
 				//				this.observers.push(dojo.connect(this.getPageSelector(), "onClick", this, this.onItemStateFocus));
-				this.observers.push(dojo.connect(this.getResourceSelector(), "onClick", this, this.onItemStateFocus));
-				this.observers.push(dojo.connect(this.getPageSelector(), "onDblClick", this, this.onItemStateEdit));
+				this.observers.push(dconnect.connect(this.getResourceSelector(), "onClick", this, this.onItemStateFocus));
+				this.observers.push(dconnect.connect(this.getPageSelector(), "onDblClick", this, this.onItemStateEdit));
 				this._pageselectortoolbar.startup()
 				return this._pageselector;
 			},
@@ -644,9 +740,11 @@ define(["dojo/_base/declare",
 					id: 'resourceselectorTree'
 				}, 'resourceselector');
 				var w, tb = this._resourceselectortoolbar = new toolbar({
+					id: 'resourceselectorToolbar',
 					style:'height:28px;padding-right:5px'
 				}, "resourceselectortbar");
-				w = new dijit.form.Button({
+				w = new button({
+					id: 'resourceselectorToolbar-update',
 					iconClass:"dijitIconDatabase",
 					showLabel: false,
 					title: 'Genindlæs sidetræ',
@@ -657,6 +755,7 @@ define(["dojo/_base/declare",
 				tb.addChild(w);
 				
 				w = new combobox({
+					id: 'resourceselectorToolbar-selectview',
 					store: new memorystore( {
 						data: [{
 							name:'Resourcefiler', 
@@ -670,7 +769,7 @@ define(["dojo/_base/declare",
 					}),
 					onChange: function(newVal) {
 						var store = this.store
-						dojo.forEach(store.data, function(item) {
+						darray.forEach(store.data, function(item) {
 							if(item.name == newVal) {
 								tree.model.store._jsonFileUrl = item.url
 								tree.update();
@@ -718,11 +817,14 @@ define(["dojo/_base/declare",
 			},
 			editNodeWidgets : [],
 			describeAttachments : function(docId) {
+				if(!docId || isNaN(parseInt(docId))) 
+					console.warn("Warning, matching all resources, please supply docId");
+				console.info(traceLog(this, arguments));
 				var self = this,
-				resStore = dijit.byId('resourceselectorTree').model.store,
-				containerNode = dojo.byId('edititem-attachmentlist');
-		
-				dojo.forEach(this.editNodeWidgets, function(w) {
+				resStore = registry.byId('resourceselectorTree').model.store,
+				containerNode = ddom.byId('edititem-attachmentlist');
+				this._resourcedescription = this._resourcedescription || [];
+				darray.forEach(this.editNodeWidgets, function(w) {
 					w.destroy()
 				});
 		
@@ -735,34 +837,35 @@ define(["dojo/_base/declare",
 							","+docId+"$|"+
 							")")
 					},
+					
 					onComplete: function(matches) {
 						var dia, btn;
 						for(var i in matches) if(matches.hasOwnProperty(i)) {
 					
-							btn = new button({
-								iconClass: 'OoCmSIcon-24 OoCmSIconAsset-'+(matches[i].relation[0] == "text/javascript" ? "js" : "css"),
+							self._resourcedescription.push(btn = new button({
+								id: 'resourceDescriptionButton-'+i.id[0],
+								iconClass: 'OoCmSIconAsset OoCmSIconAsset-'+(matches[i].relation[0] == "text/javascript" ? "js" : "css"),
 								label: matches[i].comment != "" ? matches[i].comment : (matches[i].alias != "" ? matches[i].alias : matches[i].title),
-								style: 'float: right;',
+
 								poppedOpen: false,
 								popup: (dia = new ttipdialog({
+									id: 'resourceDescriptionPopup-'+i.id[0],
 									content: '<div style="">'+ OoCmS._treebase.prototype.getTooltipContents(matches[i])+'</div>'
 								})),
 								onClick: dlang.hitch(btn, function() {
 									if(this.poppedOpen)
-										dpopup.popup.close(this.popup)
+										dpopup.close(this.popup)
 									else
-										dpopup.popup.open({
+										dpopup.open({
 											popup:this.popup, 
 											around:this.domNode,
 											orient: ['below', 'below-alt']
 										});
 									this.poppedOpen = !this.poppedOpen
 								})
-							});
+							}));
 							btn.startup();
 							btn.containerNode.style.display = "block"; // put label below icon
-							self.editNodeWidgets.push(dia) // store for destroys
-							self.editNodeWidgets.push(btn)
 							containerNode.appendChild(btn.domNode)
 						}
 					}
@@ -786,7 +889,7 @@ define(["dojo/_base/declare",
 				this.dblclicktimeout = null;
 				if(!item.root && (!item || !item._S)) return;
 				console.log('onClick', item, treeNode.tree.id);
-				dojo.byId('focusitem-text').innerHTML = this.describeItem(item);
+				ddom.byId('focusitem-text').innerHTML = this.describeItem(item);
 				this.focusItem = item;
 			},
 
@@ -796,25 +899,29 @@ define(["dojo/_base/declare",
 				this.dblclicktimeout = null;
 				if(!item || !item._S) return;
 				var id = item._S.getValue(item, "id"),
-				type = item._S.getValue(item, "page");
+				type = item._S.getValue(item, "type");
 				if(!id || id == "" || id > 9990) return;
 				console.log('pageselector onDblClick', item)
-				dojo.byId('edititem-text').innerHTML = this.describeItem(item);
+				ddom.byId('edititem-text').innerHTML = this.describeItem(item);
+				darray.forEach(this._resourcedescription, function(w) {
+					w.popup.destroy();
+					w.destroyRecursive();
+				})
 				if(type == 'page') this.describeAttachments(id)
 				this.editItem = item;
 				var bounce;
 				if(this.editTreeRow) {
 					bounce = this.editTreeRow.lastChild;
 					this.editTreeRow = treeRow.rowNode;
-					dojo.place(bounce, this.editTreeRow, 'last');
+					ddomconstruct.place(bounce, this.editTreeRow, 'last');
 				} else {
 					this.editTreeRow = treeRow.rowNode
-					bounce = dojo.create("img", {
+					bounce = ddomconstruct.create("img", {
 						src : dojo.baseUrl+"resources/blank.gif",
 						className : "OoIcon-18 OoIconEditFocus",
 						style: 'position: absolute;top:2px;'
 					}, this.editTreeRow, 'last');
-					bounce.bounce = dojo.animateProperty({
+					bounce.bounce = dfx.animateProperty({
 						node: bounce,
 						properties: {
 							right: {
@@ -825,7 +932,7 @@ define(["dojo/_base/declare",
 						},
 						duration: 500,
 						onEnd: function() {
-							dojo.animateProperty({
+							dfx.animateProperty({
 								node: bounce,
 								properties: {
 									right: {
@@ -835,13 +942,13 @@ define(["dojo/_base/declare",
 									}
 								},
 								duration: 700,
-								easing: dojo.fx.elasticInOut
+								easing: dfxeasing.elasticInOut
 							}).play()	
 						},
-						easing: dojo.fx.elasticInOut
+						easing: dfxeasing.elasticInOut
 					});
 				}
-				dojo.style(this.editTreeRow, {
+				dstyle.set(this.editTreeRow, {
 					position:'relative'
 				})
 				bounce.bounce.play();

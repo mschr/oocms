@@ -28,7 +28,7 @@ if (empty($_REQUEST['type']) && empty($_REQUEST['form']))
 	die("Form missing");
 //echo (checkReferer(($_REQUEST['type']!=""?$_REQUEST['type']:$_POST['form'])) ? "ID=\"".$_GET['id']."\"|SAVED" : "FEJL") ; 
 // ALLWAYS RETURNS TRUE TODO:
-if (!checkReferer(($_REQUEST['type'] != "" ? $_REQUEST['type'] : $_POST['form'])))
+if (!checkReferer((!empty($_REQUEST['type']) ? $_REQUEST['type'] : $_POST['form'])))
 	die("Malfunction...");
 
 if (isset($_POST['partial']))
@@ -39,8 +39,8 @@ if (isset($_POST['partial']))
  * required [ form | id | body ]
  * optional [ mimetype | attachId | uri  | alias | comment ]
  * *************************************************************************** */
-if (isset($_POST['addResource']) || $_POST['editResource']) {
 
+if (isset($_POST['addResource']) || isset($_REQUEST['EditResource'])) {
 	if (!isset($_POST['form'])) {
 
 		die("DOCTYPE UNKNOWN");

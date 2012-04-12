@@ -5,6 +5,9 @@
     Description:
         Purpose of the stylesheet follows.
 */
+@import url("../../css/oocms.css");
+@import url("../../css/fileadmin.css");
+
 html, body {
 	overflow: hidden
 }
@@ -129,7 +132,7 @@ div.paneHeader.adminTop {
 	height: 100%;
 	position: relative;
 	border: 1px solid #D0D0D0;
-	border-top: none thin;
+	border-top: none;
 	overflow-y: auto;
 }
 #mainContentPane #leftcolumn {
@@ -210,6 +213,10 @@ div.paneHeader.adminTop {
 div.dijitTreeRow._treenodeSelected {
 	background-image: url('/dojo-release-1.7.2-src/dijit/themes/claro/images/commonHighlight.png');
 	background-color: rgba(239,239,239,0.7)
+}
+/* added for absolute pos parenting of bounce arrow and resource icons */
+#pageselectorTree .dijitTreeRow {
+	position: relative;
 }
 .dijitDialog.loginDialog .topheadline {
 	font-size: 0.9em;

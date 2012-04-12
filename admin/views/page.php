@@ -153,7 +153,7 @@ else if ($_GET['form'] == "pagegrouping")
 								</td>
 								<td>
 									<div class="last mceButtonStyle">
-										<label>Gendannelsespkt. (v. annullér):</label><br />
+										<label>Gendannelsespkt:</label><br />
 										<span class="dateformat" id="onfly-restorepoint"></span>
 									</div>
 								</td>
