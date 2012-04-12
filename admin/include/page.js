@@ -425,8 +425,9 @@ define(["dojo/_base/declare",
 			getToolbar : function getToolbar() {
 				console.info(traceLog(this,arguments));
 				if(this._toolbar) return this._toolbar
-				var bt, tb = this._toolbar = new dijit.Toolbar({});
+				var bt, tb = this._toolbar = new dijit.Toolbar({id:'pageToolbar'});
 				bt = new button({
+					id:'pageToolbar-clear',
 					label: "Ryd form",
 					showLabel: true,
 					onClick: lang.hitch(this, "reset", true),
@@ -434,6 +435,7 @@ define(["dojo/_base/declare",
 				});
 				tb.addChild(bt);
 				bt = new button({
+					id:'pageToolbar-create',
 					label: "Opret",
 					showLabel: true,
 					onClick: lang.hitch(this, "create"),
@@ -441,6 +443,7 @@ define(["dojo/_base/declare",
 				});
 				tb.addChild(bt);
 				bt = new button({
+					id:'pageToolbar-save',
 					label: "Gem",
 					showLabel: true,
 					onClick: lang.hitch(this, "update"),
@@ -448,6 +451,7 @@ define(["dojo/_base/declare",
 				});
 				tb.addChild(bt);
 				bt = new button({
+					id:'pageToolbar-delete',
 					label: "Slet",
 					showLabel: true,
 					onClick: lang.hitch(this, "del"),
@@ -455,6 +459,7 @@ define(["dojo/_base/declare",
 				});
 				tb.addChild(bt);
 				bt = new button({
+					id:'pageToolbar-info',
 					showLabel: false,
 					iconClass: "OoIcon-18 OoIconInfo",
 					style:'float:right',
@@ -464,6 +469,7 @@ define(["dojo/_base/declare",
 				tb.addChild(bt);
 				this.ready.then(function() {
 					new ttip({
+						id:'pageToolbar-infoTooltip',
 						label: "<div style=\"width:450px\">"+InfoText+"</div>",
 						connectId: ['infobutton']
 					})
@@ -487,6 +493,7 @@ define(["dojo/_base/declare",
 				if(this._attachbox) return this._attachbox;
 				var self = this;
 				this._attachbox = new combobox({
+					id: 'attachIdComboBox',
 					data:[]
 				}, 'attachidcombo');
 				this.observers.push(dconnect.connect(this._pageselector, "onLoad", this, function() {
@@ -527,6 +534,7 @@ define(["dojo/_base/declare",
 				console.info(traceLog(this,arguments));
 				if(this._pageselector) return this._pageselector;
 				this._pageselector = new treebase({
+					id: 'pageSelectorTree',
 					rootLabel : "Dokumenter",
 					store: new readstore({
 						clearOnClose:true,
@@ -548,6 +556,7 @@ define(["dojo/_base/declare",
 					}
 				});
 				var w, tb = this._pageselectortoolbar = new toolbar({
+					id: 'pageSelectorToolbar',
 					style:'padding-right:5px'
 				}, "pagetoolbar");
 				//				w = new dijit.form.TextBox({
@@ -558,6 +567,7 @@ define(["dojo/_base/declare",
 				//				console.log(w)
 				//				tb.addChild(w);
 				w = new button({
+					id: 'pageSelectorToolbar-update',
 					iconClass:"dijitIconUndo",
 					label : '&thinsp;',
 					title: 'Genindlæs sidetræ',

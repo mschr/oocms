@@ -140,6 +140,14 @@ define(['dojo/_base/declare',
 					this.contentpane.set("href", 'views/frontpage.php');
 				}
 			},
+			destroy: function destroy() {
+				if(this._widgetInUse) {
+					this._widgetInUse.unload();
+				}
+				this.menutree.model.store.close();
+				this.menutree.destroyRecursive();
+				this.inherited();
+			},
 			layout: function layout() {
 				var mask = $(".colmask")[0];
 				// set subtraction according to top header and bottom footer 

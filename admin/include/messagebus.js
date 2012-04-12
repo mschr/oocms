@@ -195,6 +195,9 @@ class="dijitProgressBarIndeterminateHighContrastImage" alt=""\
 					mbus.error(shortMsg, optionalDuration);
 				})
 
+			},
+			destroy: function() {
+				if(this._dialog) this._dialog.destroyRecursive();
 			}
 		});
 		MessageBus.notifyTemplates = {

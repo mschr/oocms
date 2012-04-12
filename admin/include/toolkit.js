@@ -149,7 +149,7 @@ define(["dojo/_base/declare"], function(declare){
 			var item, tg, tree = this.tree;
 			if(itemOrEvt.target) { // if incoming caller is a context-menu
 				item = this.tree.focusItem;
-				var tg = (typeof e != "number" ? dijit.getEnclosingWidget(e.target) : e);
+				tg = (typeof e != "number" ? dijit.getEnclosingWidget(itemOrEvt.target) : itemOrEvt);
 				direction = tg.params.direction
 			} else {
 				item = itemOrEvt;
@@ -269,7 +269,7 @@ define(["dojo/_base/declare"], function(declare){
 							movefrompath : from
 						},
 						load: function() {
-							dia.hide();
+							dia.destroyRecursive();
 						}
 					})
 				});
@@ -476,6 +476,7 @@ define(["dojo/_base/declare"], function(declare){
 		},
 
 		showPreview : function showPreview(res) {
+			// experimental
 			console.info(traceLog(this,arguments));
 			var w = dijit.byId('docPreview');
 
