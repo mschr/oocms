@@ -12,26 +12,24 @@ define(["dojo/_base/declare",
 	"dojo/dom-construct",
 	"dijit/registry",
 	"dojo/topic",
-	"dojo/dnd/common",
 	//	"dojo/date/locale",
-	"dojo/dnd/Source",
 	"dijit/tree/dndSource",
-	//	"dijit/Editor",
 	"dijit/_base/popup",
-	"dijit/ProgressBar",
 	"dijit/Toolbar",
 	"dijit/form/Button",
 	"dijit/TooltipDialog",
-	"dijit/form/ComboBox",
 	"dojo/data/ItemFileWriteStore",
 	"dojo/store/Memory",
 	"dijit/tree/ForestStoreModel",
 	"dojo/fx/easing",
-	"OoCmS/_treebase"
-	], function(declare,abstractcontroller,dlang, darray, dconnect, dxhr, dfx, ddom,
-		dstyle, dclass, ddomgeometry, ddomconstruct, registry, dtopic, dndCommon,
-		dndSource, treedndSource, dpopup, progressbar, toolbar, button, ttipdialog,
-		combobox, writestore, memorystore, forestmodel, dfxeasing){
+	"OoCmS/_treebase",
+	"OoCmS/formdialog/Resources",
+
+	], function(declare, abstractcontroller,dlang, darray, dconnect, dxhr, dfx,
+		ddom, dstyle, dclass, ddomgeometry, ddomconstruct, registry, dtopic,
+		treedndSource, dpopup, toolbar, button, ttipdialog,
+		writestore, memorystore, forestmodel, 
+		dfxeasing, _treebase, resourceDialog){
 		var numOrder = function(a,b) {
 			if(!b) return -1;
 			return parseFloat(a)-parseFloat(b);
@@ -53,6 +51,7 @@ define(["dojo/_base/declare",
 				res = b.length < a.length ? 1 : (b.length==a.length ? 0 : -1);
 			return res;
 		}
+		
 		var dndModel = declare("OoCmS._dndmodel", [forestmodel], {
 			_requeryTop: function _requeryTop(){
 				// reruns the query for the children of the root node,
@@ -206,7 +205,8 @@ define(["dojo/_base/declare",
 					console.error("Widget ID ["+item.id+"] of dropped item cannot be found");
 					return;
 				}
-				var oAttach = srcstore.getValue(sourceItem, "attachId", "").split(",");
+				var oAttach = srcstore.getValue(sourceItem, "attachId", "");
+				oAttach = oAttach == "" ? [] : oAttach.split(",")
 				// we will now make change to Resources-store and submit them
 				for(var i = 0; i < oAttach.length; i++) {
 					if(oAttach[i] == id) {
@@ -238,12 +238,11 @@ define(["dojo/_base/declare",
 		});
 				
 		var PageSelectTree, _dndtree = PageSelectTree = 
-		declare("OoCmS._dndtree", [OoCmS._treebase],{
+		declare("OoCmS._dndtree", [_treebase],{
 			observers: [],
 			loaded: false,
 			initialized: false,
 			dndController: treedndSource,
-			observers : [],
 			constructor: function constructor(args) {
 				window.docTree = this;
 				if(args.dndController) this.dndController = args.dndController;
@@ -295,7 +294,6 @@ define(["dojo/_base/declare",
 				var to_dndSource = this,
 				toTree = to_dndSource.tree,
 				fromTree = from_dndSource.tree;
-				console.log('to', rowNode ? rowNode : targetDomNode, 'on', toTree.id, 'from', from_dndSource.selection, 'in', fromTree.id)
 				if(toTree.id == "resourceselectorTree") {
 					// resourcetree will not accept any drops at all
 					return false;
@@ -416,6 +414,8 @@ define(["dojo/_base/declare",
 					if(this._pending._newItems.hasOwnProperty(i))
 						console.log('newItem WTF?', this._pending._newItems[i]);
 				};
+				// FIXME function reference into store
+				ctrl._widgetInUse.renderTree(true)
 				saveCompleteCallback();
 
 			}
@@ -525,6 +525,8 @@ define(["dojo/_base/declare",
 						}
 					});
 				};
+				// FIXME function reference into store
+				ctrl._widgetInUse.renderTree(true)
 				saveCompleteCallback();
 
 			},
@@ -567,34 +569,58 @@ define(["dojo/_base/declare",
 				this._resourceselector.destroyRecursive();
 				this._toolbar.destroyRecursive();
 				this._pageselectortoolbar.destroyRecursive();
-				this._resourceselectortoolbar.destroyRecursive();
+			//				this._resourceselectortoolbar.destroyRecursive();
 
 			},
-			ready: function ready(funcObject /*(self)*/) {
-				var self = this,
-				test = self._resourceselector;
-				if(test) {
-					console.info(traceLog(this,arguments));
-					if(typeof funcObject == "function") {
 
-						funcObject(self);
-					}
-					return;
-				}
-				var _interval = setInterval(function() {
-					test = registry.byId('resourceselectorTree');
-					if (eval(test)) { //does the object exist?
-						clearInterval(_interval);
-						console.info(traceLog(this,arguments));
-						if(funcObject) {
-							funcObject(self);
-						}
-					}
-				}, 150);
-			},
 			bindDom: function bindDom(node) {
 				console.info(traceLog(this,arguments));
 				this.attachTo = node;
+			},
+			renderTree: function renderTree(force) {
+				var p = this.getPageSelector(),
+				r = this.getResourceSelector(),
+				pagesStore = p.model.store,
+				resStore = r.model.store;
+				if(!force && 
+					(pagesStore._loadInFinished 
+						|| resStore._loadInFinished 
+						|| pagesStore._isrendered)) return;
+				pagesStore._isrendered = true;
+
+				p.rootNode.getChildren().forEach(function(treeNode) {
+					var id = pagesStore.getValue(treeNode.item, "id"), i;
+					var exp = "("+"^"+id+"$|"+"^"+id+",|"+","+id+","+"|,"+id+"$"+")";
+					dstyle.set(treeNode.domNode, {
+						position:'relative'
+					})
+					resStore.fetch({
+						query: {
+							attachId: new RegExp(exp)
+						},
+						onComplete: function(resFound) {
+							if(!resFound || resFound.length == 0) {
+								if(treeNode.resourceIcon) ddom.destroy(treeNode.resourceIcon)
+								if(treeNode.resourceText) ddom.destroy(treeNode.resourceText)
+								return;
+							}
+
+							if(!treeNode.resourceIcon)
+								treeNode.resourceIcon = ddomconstruct.create("img", {
+									src : dojo.baseUrl+"resources/blank.gif",
+									className : "OoCmSIconAsset OoCmSIconAsset-bin",
+									style: 'position: absolute;top:0; left:2px;'
+								}, treeNode.rowNode, 'last');
+							if(!treeNode.resourceText && resFound.length > 1)
+								treeNode.resourceText = ddomconstruct.create("span", {
+									innerHTML: resFound.length,
+									style: 'font: 14px verdana; position: absolute;top:2px; left:14px;'
+								}, treeNode.rowNode, 'last');
+							
+						}
+					})
+				})
+				
 			},
 			startup: function startup() {
 				console.info(traceLog(this,arguments));
@@ -602,7 +628,12 @@ define(["dojo/_base/declare",
 				this.getPageSelector()./*placeAt('pageselector').*/startup();
 				this.getResourceSelector()./*placeAt('resourceselector').*/startup();
 				this.inherited(arguments);
-								
+			//				resStore.fetch({
+			//					query: {
+			//						attachId: new RegExp()
+			//					},
+			//					
+			//					onComplete: function
 			},
 			//			postCreate: function postCreate() {
 			//				console.info(traceLog(this,arguments));
@@ -611,7 +642,9 @@ define(["dojo/_base/declare",
 			getToolbar : function getToolbar() {
 				console.info(traceLog(this,arguments));
 				if(this._toolbar) return this._toolbar
-				var bt, tb = this._toolbar = new toolbar({id:'pageTreeToolbar'}, "pagetoolbar");
+				var bt, tb = this._toolbar = new toolbar({
+					id:'pageTreeToolbar'
+				}, "pagetoolbar");
 				//				dojo.place('<span class="label dijitButtonText">Position</span>', tb.domNode, "last");
 				// TODO: phase out togglePosition as toolkit functionality
 				bt = new button({
@@ -697,7 +730,14 @@ define(["dojo/_base/declare",
 					style: 'float: right',
 					iconClass: "OoCmSIconAsset OoCmSIconAsset-bin",
 					onClick: function() {
-						alert('todo')
+						
+						var w = new resourceDialog({
+							url: 'save.php?EditResource'
+						});
+						console.log(w._uri)
+						w.startup()
+						console.log(w._uri.inputNode)
+						w.show();
 					}
 				})
 				tb.addChild(w);
@@ -718,7 +758,8 @@ define(["dojo/_base/declare",
 				});
 				//				this.observers.push(dojo.connect(this.getPageSelector(), "onClick", this, this.onItemStateFocus));
 				this.observers.push(dconnect.connect(this.getResourceSelector(), "onClick", this, this.onItemStateFocus));
-				this.observers.push(dconnect.connect(this.getPageSelector(), "onDblClick", this, this.onItemStateEdit));
+				this.observers.push(dconnect.connect(this._pageselector, "onDblClick", this, this.onItemStateEdit));
+				this.observers.push(dconnect.connect(this._pageselector, "onLoad", this, this.renderTree));
 				this._pageselectortoolbar.startup()
 				return this._pageselector;
 			},
@@ -739,53 +780,55 @@ define(["dojo/_base/declare",
 					rootLabel : "Sidetræ",
 					id: 'resourceselectorTree'
 				}, 'resourceselector');
-				var w, tb = this._resourceselectortoolbar = new toolbar({
-					id: 'resourceselectorToolbar',
-					style:'height:28px;padding-right:5px'
-				}, "resourceselectortbar");
-				w = new button({
-					id: 'resourceselectorToolbar-update',
-					iconClass:"dijitIconDatabase",
-					showLabel: false,
-					title: 'Genindlæs sidetræ',
-					style: 'float: right;margin-top:2px',
-					onClick: dlang.hitch(this._resourceselector,this._resourceselector.update)
-				//   iconClass: "dijitEditorIcon dijitEditorIcon"+label
-				});
-				tb.addChild(w);
-				
-				w = new combobox({
-					id: 'resourceselectorToolbar-selectview',
-					store: new memorystore( {
-						data: [{
-							name:'Resourcefiler', 
-							id:'R',
-							url: gPage.baseURI + '/openView/Resources.php?format=json'
-						},{
-							name:'Produktkategorier', 
-							id:'P',
-							url: gPage.baseURI + '/openView/Products.php?format=json&type=category'
-						}]
-					}),
-					onChange: function(newVal) {
-						var store = this.store
-						darray.forEach(store.data, function(item) {
-							if(item.name == newVal) {
-								tree.model.store._jsonFileUrl = item.url
-								tree.update();
-							}
-						})
-						console.log("change:", arguments, this)
-					},
-					value: 'Resourcefiler',
-					searchAttr:'name',
-					style: 'width:135px;margin:4px;'
-				});
-				w.startup();
-				tb.addChild(w);
+				//				var w, tb = this._resourceselectortoolbar = new toolbar({
+				//					id: 'resourceselectorToolbar',
+				//					style:'height:28px;padding-right:5px'
+				//				}, "resourceselectortbar");
+				//				w = new button({
+				//					id: 'resourceselectorToolbar-update',
+				//					iconClass:"dijitIconDatabase",
+				//					showLabel: false,
+				//					title: 'Genindlæs sidetræ',
+				//					style: 'float: right;margin-top:2px',
+				//					onClick: dlang.hitch(this._resourceselector,this._resourceselector.update)
+				//				//   iconClass: "dijitEditorIcon dijitEditorIcon"+label
+				//				});
+				//				tb.addChild(w);
+				//				
+				//				w = new combobox({
+				//					id: 'resourceselectorToolbar-selectview',
+				//					store: new memorystore( {
+				//						data: [{
+				//							name:'Resourcefiler', 
+				//							id:'R',
+				//							url: gPage.baseURI + '/openView/Resources.php?format=json'
+				//						},{
+				//							name:'Produktkategorier', 
+				//							id:'P',
+				//							url: gPage.baseURI + '/openView/Products.php?format=json&type=category'
+				//						}]
+				//					}),
+				//					onChange: function(newVal) {
+				//						var store = this.store
+				//						darray.forEach(store.data, function(item) {
+				//							if(item.name == newVal) {
+				//								tree.model.store._jsonFileUrl = item.url
+				//								tree.update();
+				//							}
+				//						})
+				//						console.log("change:", arguments, this)
+				//					},
+				//					value: 'Resourcefiler',
+				//					searchAttr:'name',
+				//					style: 'width:135px;margin:4px;'
+				//				});
+				//				w.startup();
+				//				tb.addChild(w);
+				//				this._resourceselectortoolbar.startup();
+
 				this._resourceselector.model.store.fetch();
-				this._resourceselector.onClick = dlang.hitch(this, this.onItemStateFocus);
-				this._resourceselectortoolbar.startup();
+				this.observers.push(dconnect.connect(this._resourceselector, "onClick", this, this.onItemStateFocus));
+				this.observers.push(dconnect.connect(this._resourceselector, "onLoad", this, this.renderTree));
 				return this._resourceselector;
 			},
 			dblclicktimeout: null,
@@ -843,14 +886,14 @@ define(["dojo/_base/declare",
 						for(var i in matches) if(matches.hasOwnProperty(i)) {
 					
 							self._resourcedescription.push(btn = new button({
-								id: 'resourceDescriptionButton-'+i.id[0],
+								id: 'resourceDescriptionButton-'+matches[i].id[0],
 								iconClass: 'OoCmSIconAsset OoCmSIconAsset-'+(matches[i].relation[0] == "text/javascript" ? "js" : "css"),
 								label: matches[i].comment != "" ? matches[i].comment : (matches[i].alias != "" ? matches[i].alias : matches[i].title),
 
 								poppedOpen: false,
 								popup: (dia = new ttipdialog({
-									id: 'resourceDescriptionPopup-'+i.id[0],
-									content: '<div style="">'+ OoCmS._treebase.prototype.getTooltipContents(matches[i])+'</div>'
+									id: 'resourceDescriptionPopup-'+matches[i].id[0],
+									content: '<div style="">'+ _treebase.prototype.getTooltipContents(matches[i])+'</div>'
 								})),
 								onClick: dlang.hitch(btn, function() {
 									if(this.poppedOpen)
@@ -898,15 +941,16 @@ define(["dojo/_base/declare",
 				if(this.dblclicktimeout) clearTimeout(this.dblclicktimeout);
 				this.dblclicktimeout = null;
 				if(!item || !item._S) return;
-				var id = item._S.getValue(item, "id"),
+				var id = item._S.getValue(item, "id"), w
 				type = item._S.getValue(item, "type");
 				if(!id || id == "" || id > 9990) return;
 				console.log('pageselector onDblClick', item)
 				ddom.byId('edititem-text').innerHTML = this.describeItem(item);
-				darray.forEach(this._resourcedescription, function(w) {
-					w.popup.destroy();
-					w.destroyRecursive();
-				})
+				if(this._resourcedescription) 
+					while((w = this._resourcedescription.shift())) {
+						w.popup.destroy();
+						w.destroyRecursive();
+					}
 				if(type == 'page') this.describeAttachments(id)
 				this.editItem = item;
 				var bounce;
@@ -926,7 +970,7 @@ define(["dojo/_base/declare",
 						properties: {
 							right: {
 								start:0,
-								end:22, 
+								end:17, 
 								unit: 'px'
 							}
 						},
@@ -936,7 +980,7 @@ define(["dojo/_base/declare",
 								node: bounce,
 								properties: {
 									right: {
-										start:22,
+										start:17,
 										end:10, 
 										unit: 'px'
 									}

@@ -249,7 +249,6 @@ class Resource {
 
 		global $CONFIG;
 		global $user;
-		fb($user);
 		$sql = new SQL("admin");
 		$ok = $sql->doQuery("	UPDATE `" . $CONFIG['db_resourcestable'] . "` SET " .
 				  "`attach_id`='" . $this->attachId . "'," .

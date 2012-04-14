@@ -419,8 +419,8 @@ tbody.mceLookFeel ul.mceLinkList {
 
 
 .assetsDnD {
-/*	width: 330px;
-	height: 151px;*/
+	/*	width: 330px;
+		height: 151px;*/
 	position: relative;
 	margin: 20px;
 }
@@ -428,7 +428,7 @@ tbody.mceLookFeel ul.mceLinkList {
 	text-align:center;
 	font-size: 1em;
 	color: #665aaa;
-	
+
 	text-shadow: 1px 1px 2px #333;
 	filter: dropshadow(color=#333, offx=1, offy=1); 
 }
@@ -437,7 +437,7 @@ tbody.mceLookFeel ul.mceLinkList {
 	width: 310px;
 	height: 131px;
 	background: url("dropbox.png") top left no-repeat;
-/*	margin-bottom: 20px;*/
+	/*	margin-bottom: 20px;*/
 }
 .assetsDnD .dndAcceptance.hover {
 	background: url("dropboxHover.png") top left no-repeat;
@@ -473,14 +473,29 @@ tbody.mceLookFeel ul.mceLinkList {
 .assetsDnD .dndAcceptance.dndDone {
 	border: 2px dashed #47725a;
 }
+.OoCmSSimpleInput {
+	margin-top: 0.4em;
+}
+.OoCmSSimpleInput .OoCmSSimpleInputLabelNode {
+	text-align: left;
+	vertical-align: middle;
+}
+.OoCmSSimpleInput .OoCmSSimpleInputInputNode {
+	padding-left: 15px;
+}
+.OoCmSSimpleInput .OoCmSSimpleInputLabelText {
+	font-weight: 700;
+	font-size: 1.1em;
+}
 
 .OoIcon-18, .OoIcon-24, .OoIcon-48 {
 	background-repeat: no-repeat;
 	text-align: center;
 }
-div#outerWrap .OoIcon-18 {width: 18px;height: 18px;}
-div#outerWrap .OoIcon-24 {width: 24px;height: 24px;}
-div#outerWrap .OoIcon-48 {width: 48px;height: 48px;}
+
+.OoIcon-18 {width: 18px;height: 18px;}
+.OoIcon-24 {width: 24px;height: 24px;}
+.OoIcon-48 {width: 48px;height: 48px;}
 
 .OoIcon-18.OoIconPage {background-image: url(../../ico/oo_page-18.png)}
 .OoIcon-24.OoIconPage {background-image: url(../../ico/oo_page-24.png)}
@@ -492,7 +507,7 @@ div#outerWrap .OoIcon-48 {width: 48px;height: 48px;}
 .OoIcon-24.OoIconInfo {background-image: url(../../ico/oo_info-24.png)}
 .OoIcon-48.OoIconInfo {background-image: url(../../ico/oo_info-48.png)}
 
-.OoIcon-18.OoIconPageRelation {background-image: url(../../ico/oo_pagerelation-18.png)}
+.OoIcon-18.OoIconPageRelation {background-image: url(../../ico/oo_pagerelation-16.png)}
 .OoIcon-24.OoIconPageRelation {background-image: url(../../ico/oo_pagerelation-24.png)}
 .OoIcon-48.OoIconPageRelation {background-image: url(../../ico/oo_pagerelation-48.png)}
 
