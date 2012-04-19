@@ -1,0 +1,31 @@
+<div>
+	<div style="display: none" class="errormsg" role="alert" id="appErrorDiv"></div>
+	<div class="mceLookFeel">
+		<div style="height: auto;margin:8px" class="first last mceButtonStyle" role="presentation">
+			<b>Element i <i>Edit</i></b>:
+			<span id="edititem-text"></span>
+		</div>
+		<div style="height: auto;margin:8px" class="first last mceButtonStyle" role="presentation">
+			<b>Ressource i <i>Focus</i></b>:
+			<span id="focusitem-text"></span>
+		</div>
+
+		<div style="height: auto;margin:8px" class="first last mceButtonStyle" role="presentation">
+			<b>Howto</b>:
+			Sider har relationer til elementer, dels til hverandre og dels til ressources (includes).<br>
+			Enhver side kan tilhøre en anden som dennes underside. Sider i top-niveauet kan have tilknyttet ressourcer såsom script eller style - og sider herunder nedarver hermed denne include.
+			Sidst men ikke mindst, kan en side være gemt som kladde.<br>
+			<br>
+			Dvs. der findes fem typer, hhv 'side', 'underside', 'sidekladde', 'produkt', 'include' - hvor sidstnævnte typisk er en javascript-fil eller noget styling der ikke hører hjemme under sitets template.
+			<br>
+			<br>
+			<ul style="margin:0">
+				<li><b>Dobbeltklik</b> - Dobbeltklikkes på en titel under 'Dokumenter' (venstre side) startes <i>Edit</i> af elementet.</li>
+				<li><b>Enkeltklik</b> - Et klik vil typisk starte træk-slip hvis knappen holdes inde, men et enkeltklik på et element i højre side, placerer ressourcer i fokus.</li>
+				<li><b>Træk-Slip</b> - Når en gruppe trækkes - og slippes ned på / mellem elementer der giver 'grønt lys', udføres hhv. positionering samt tilknytning af 'indeholdende beholder'</li>
+				<li><i>Op, Ned, Tilknyt</i> - Handlingerne på værktøjslinien arbejder alene på <i>Edit</i>, dvs op og ned positionerer og tilknyt tilknytter ressource der er valgt som <i>Focus</i> til sideelementet valgt i <i>Edit</i>.</li>
+			</ul>
+		</div>
+
+	</div>
+</div>

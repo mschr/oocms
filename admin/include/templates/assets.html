@@ -1,0 +1,16 @@
+<div>
+	<div data-dojo-attach-point="uploaderNode"></div>
+	<div data-dojo-attach-point="filelistNode"></div>
+	<div data-dojo-attach-point="dndOpenerFocusNode" style="position:absolute; right: 10px; top: 5px;">
+		<div data-dojo-attach-point="dndOpenerContainerNode" class="assetsDnD-title">
+			Træk og slip her <span class="dijitReset dijitInline dijitArrowButtonInner"></span>
+		</div>
+	</div>
+	<!--			  data-dojo-type="dojox.form.uploader.FileList" 
+				  data-dojo-props="uploaderId:'assetsuploader',headerIndex:'',headerFilename:'Filnavn', headerFilesize: 'Filstørrelse'"></div>-->
+	<div role="dialog" data-dojo-attach-point="dndDialogNode">
+		<div class="assetsDnD hiddenBox" id="assetsuploaderdragdrop" role="presentation">
+			<div data-dojo-attach-point="dndTargetNode" class="dndAcceptance"></div>
+		</div>
+	</div>
+</div>

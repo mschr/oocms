@@ -1,0 +1,16 @@
+<div class="dijitDialog" role="dialog" aria-labelledby="${id}_title">
+	<div data-dojo-attach-point="titleBar" class="dijitDialogTitleBar"> <span data-dojo-attach-point="titleNode" class="dijitDialogTitle" id="${id}_title"></span> <span data-dojo-attach-point="closeButtonNode" class="dijitDialogCloseIcon" data-dojo-attach-event="ondijitclick: onCancel" title="${buttonCancel}" role="button" tabIndex="-1"> <span data-dojo-attach-point="closeText" class="closeText" title="${buttonCancel}">x</span> </span> </div>
+	<div style="text-align:center;" data-dojo-type="dijit.Toolbar"><select id="${id}_stateselect" data-dojo-attach-point="stateselectWidget" data-dojo-type="dijit.form.Select">
+			<option value="0">&lt;link href&gt; / &lt;script src&gt;</option>
+			<option value="1">&lt;style&gt; / &lt;script&gt;</option>
+		</select></div>
+	<div style="padding: 10px" data-dojo-attach-point="containerNode" class="dijitDialogPaneContent">
+		<div id="${id}_form" action="${url}" data-dojo-type="dijit.form.Form" data-dojo-attach-point="formWidget">
+			<input data-dojo-type="dijit.form.TextBox" type="hidden" name="form" value="include"/>
+		</div>
+		<div class="OoCmSFormDialogResourcesButtonBar">
+			<div data-dojo-attach-point="saveButton" data-dojo-type="dijit.form.Button" data-dojo-props="label:'${buttonSave}'"></div>
+			<div data-dojo-attach-point="cancelButton" data-dojo-type="dijit.form.Button" data-dojo-props="label:'${buttonCancel}'"></div>
+		</div>
+	</div>
+</div>
