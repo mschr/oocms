@@ -2,29 +2,23 @@ define(["dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/dom",
-	"dojo/dom-construct",
+	"dojo/dom-style",
 	"dojo/topic",
 	"dijit/registry",
 	"dijit/Dialog",
 	"dijit/form/Button",
-	"dijit/ProgressBar"
+	"OoCmS/_messagebus"
 	
 
-	], function(declare, array, lang, dom, domconstruct, dtopic, registry, dialog, button, progressbar) {
-		var ajax_notification_templateString = '<div><div class="ajax_notification">\
-<div class="ajax_notification_title" data-dojo-attach-point="titleNode"></div>\
-<div style="height: 30px" class="dijitProgressBar dijitProgressBarEmpty" role="progressbar">\
-<div style="height: 60px" data-dojo-attach-point="internalProgress" class="dijitProgressBarFull">\
-<div class="dijitProgressBarTile" role="presentation">\
-</div><span style="visibility:hidden">&#160;</spa>></div>\
-<div data-dojo-attach-point="labelNode" class="dijitProgressBarLabel" id="${id}_label"></div>\
-<img data-dojo-attach-point="indeterminateHighContrastImage" \
-class="dijitProgressBarIndeterminateHighContrastImage" alt=""\
-/></div></div></div>';
-		var MessageBus = declare("OoCmS.messagebus", [], {
+	], function(declare, array, lang, dom, domstyle, dtopic, registry, dialog, button, MessageBusBase) {
+		var MessageBus = declare("OoCmS.messagebus", [MessageBusBase], {
 			_dialog: undefined,
 			constructor: function(args) {
 				this.subscribe();
+			},
+			destroy: function() {
+				if(this._dialog) this._dialog.destroyRecursive();
+				this.inherited(arguments);
 			},
 			/**
 		 * presents a dialog given a title, contents and an array of button objects
@@ -83,13 +77,13 @@ class="dijitProgressBarIndeterminateHighContrastImage" alt=""\
 				return this._dialog;
 			},
 			error: function(msg, duration) {
-				var node = dojo.byId('appErrorDiv');
+				var node = dom.byId('appErrorDiv');
 				
 				dojo.animateProperty({
 					node: node,
 					onBegin: function() {
 						node.innerHTML = msg;
-						dojo.style(node, {
+						domstyle.set(node, {
 							height : "0",
 							opacity: 0
 						});
@@ -105,13 +99,12 @@ class="dijitProgressBarIndeterminateHighContrastImage" alt=""\
 
 					},
 					properties: {
-						height: dojo.style(node, "line-height"), 
+						height: domstyle.get(node, "line-height"), 
 						opacity: 1
 					}
 				}).play()
 			},
 			_wPurge: function(b, recurse) {
-				console.info(traceLog(this,arguments));
 				b=(typeof b == "string" ? registry.byId(b.id) : b);
 				if(b) {
 					if(recurse)b.destroyRecursive();
@@ -119,9 +112,7 @@ class="dijitProgressBarIndeterminateHighContrastImage" alt=""\
 				}
 			},
 			_notifyCreateButtons : function(oButtonCB) {
-				var self = this;
-				console.info(traceLog(this,arguments));
-				
+				var self = this;				
 				array.forEach(oButtonCB, function(_button) {
 					
 					var node = dom.byId(_button.id);
@@ -152,52 +143,55 @@ class="dijitProgressBarIndeterminateHighContrastImage" alt=""\
 			},
 			
 			subscribe: function subscribe() {
+				if(this.hasSubscribed) return;
 				var mbus = this;
+				this.handles[this.handles.length] = 
 				dtopic.subscribe("notify/save/success", function(title, buttonObjArray){
+					if(MessageBus.isLoading()) MessageBus.loading(false);
 					// buttonids : ['canceloption']
 					mbus.notify(title,MessageBus.notifyTemplates.saveSuccess, buttonObjArray);
-				})
+				});
+				this.handles[this.handles.length] = 
 				dtopic.subscribe("notify/save/error", function(title, resReplace, buttonObjArray){
+					if(MessageBus.isLoading()) MessageBus.loading(false);
 					// buttonids : ['canceloption', 'saveoption']
 					if(typeof resReplace != "string") resReplace = "";
 					mbus.notify(title, MessageBus.notifyTemplates.saveErr.replace("{RESPONSE}", resReplace), buttonObjArray);
-				})
+				});
+				this.handles[this.handles.length] = 
 				dtopic.subscribe("notify/delete/confirm", function(title, resReplace, buttonObjArray){
+					if(MessageBus.isLoading()) MessageBus.loading(false);
 					// buttonids : ['continueoption', 'canceloption']
 					if(typeof resReplace != "string") resReplace = "";
 					mbus.notify(title, MessageBus.notifyTemplates.confirmDelete.replace("{RESPONSE}", resReplace), buttonObjArray);
-				})
+				});
+				this.handles[this.handles.length] = 
 				dtopic.subscribe("notify/delete/error", function(title, resReplace, buttonObjArray){
-					console.log(arguments)
+					if(MessageBus.isLoading()) MessageBus.loading(false);
 					// buttonids : ['canceloption']
 					if(typeof resReplace != "string") resReplace = "";
 					mbus.notify(title, MessageBus.notifyTemplates.deleteErr.replace("{RESPONSE}", resReplace), buttonObjArray);
-				})
+				});
+				this.handles[this.handles.length] = 
 				dtopic.subscribe("notify/delete/success", function(title, resReplace, buttonObjArray){
+					if(MessageBus.isLoading()) MessageBus.loading(false);
 					// buttonids : ['canceloption']
 					if(typeof resReplace != "string") resReplace = "";
 					mbus.notify(title, MessageBus.notifyTemplates.deleteErr.replace("{RESPONSE}", resReplace), buttonObjArray);
-				})
+				});
+				this.handles[this.handles.length] = 
 				dtopic.subscribe("notify/dirty/confirm", function(title, resReplace, buttonObjArray){
+					if(MessageBus.isLoading()) MessageBus.loading(false);
 					// buttonids : ['continueoption', 'canceloption']
 					if(typeof resReplace != "string") resReplace = "";
 					mbus.notify(title, MessageBus.notifyTemplates.confirmCancel.replace("{RESPONSE}", resReplace), buttonObjArray);
-				})
-				dtopic.subscribe("notify/progress/done", function() {
-					MessageBus.loading(false);
-				})
-				dtopic.subscribe("notify/progress/loading", function(params) {
-					MessageBus.loading(params || {
-						indeterminate: true
-					});
 				});
+				this.handles[this.handles.length] = 
 				dtopic.subscribe("notify/error", function(shortMsg,optionalDuration) {
 					mbus.error(shortMsg, optionalDuration);
-				})
-
-			},
-			destroy: function() {
-				if(this._dialog) this._dialog.destroyRecursive();
+				});
+				this.inherited(arguments);
+				this.hasSubscribed = true;
 			}
 		});
 		MessageBus.notifyTemplates = {
@@ -240,51 +234,9 @@ class="dijitProgressBarIndeterminateHighContrastImage" alt=""\
 		"<span id=\"canceloption\">Gå tilbage</span>"+
 		"</div></div>"
 		}
-		MessageBus.loading = function loading(params) {
-			if(!MessageBus._progressmeter) {
-				MessageBus._progressmeter = new progressbar({
-					templateString : ajax_notification_templateString,
-					id: 'loading_parent'
-				});
-				MessageBus._progressmeter.show = {
-					play: function() {
-						dojo.style(MessageBus._progressmeter.domNode, {
-							display:'block',
-							opacity: '1'
-						})
-						MessageBus._progressmeter.domNode.isShowing = true;
-					}
-				};
-				MessageBus._progressmeter.startup();
-				MessageBus._progressmeter.hide = dojo.animateProperty({
-					node:MessageBus._progressmeter.domNode,
-					duration:1800,
-					onEnd: function() {
-						this.node.style.display='none';
-						this.node.isShowing = false;
-					},
-					properties: {
-						opacity: 0
-					}
-				});
-				MessageBus._progressmeter.placeAt(dojo.body());
-			}
-			if(typeof params == "boolean" && params == false) {
-				MessageBus._progressmeter.update({
-					maximum: 1, 
-					progress:1
-				});
-				if(MessageBus._progressmeter.domNode.isShowing) 
-					MessageBus._progressmeter.hide.play(120);
-			} else {
-				if(!MessageBus._progressmeter.domNode.isShowing) 
-					MessageBus._progressmeter.show.play();
-				MessageBus._progressmeter.titleNode.innerHTML= (params.title) ? params.title : "Indlæser, vent et øjeblik...";
-				MessageBus._progressmeter.set("maximum", (params.maximum) ? params.maximum : MessageBus._progressmeter.maximum);
-				MessageBus._progressmeter.set("value", (params.indeterminate) ? Infinity : params.progress);
-			//this._progressmeter.update(params);
-			}
-		}
+		
+		MessageBus.isLoading = MessageBusBase.isLoading;
+		MessageBus.loading = MessageBusBase.loading
 		return MessageBus;
 	});
 console.log('eval messagebus.js');

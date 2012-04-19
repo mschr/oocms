@@ -17,12 +17,12 @@ $dtheme = (empty($CONFIG['dojotheme']) ? "claro" : $CONFIG['dojotheme']);
 ?>
 <!DOCTYPE html>
 <html>
-	<head>
-		<?= Theme::renderAdminHTMLHead(); ?>
-	</head>
-	<body class="<?= $dtheme ?>">
-
-		<div class="header paneHeader adminTop">
+	<head
+	<?= Theme::renderAdminHTMLHead(); ?>
+</head>
+<body class="<?= $dtheme ?>" style="display:none">
+	<div id="border" data-dojo-type="dijit.layout.BorderContainer">
+		<div data-dojo-props="splitter: false,region: 'top'" data-dojo-type="dijit._WidgetBase" style="top:0px !important" class="header paneHeader adminTop">
 			<script>
 				(function() {
 					var node = document.getElementsByTagName('head')[0].childNodes[0];
@@ -31,44 +31,22 @@ $dtheme = (empty($CONFIG['dojotheme']) ? "claro" : $CONFIG['dojotheme']);
 				})();
 			</script>
 		</div>
-		<div id="outerWrap" class="colmask">
-			<div class="colmid">
-				<div class="colright" style="margin-left: -200px">
-					<div class="col1wrap">
-						<div class="col1pad" style="margin-left: 200px">
-							<div class="col1">
-								<div class="adminBox"><!-- Column 1 start -->
-									<div id="mainContentPane" style="padding: 0; margin: 0"
-										  data-dojo-type="dojox.layout.ContentPane" 
-										  data-dojo-props="title: 'Intet valgt', parseOnLoad: false"></div>
-									<div class="clear"></div>
-									<!-- Column 1 end --></div>
-							</div>
-						</div>
-					</div>
-					<div class="col2" style="left:0;">
-						<div class="adminBox"><!-- Column 2 start -->
-							<div class="paneHeader" onclick="this.parentNode.className = (this.parentNode.className == ''?'folded':'');alert('re-layout ctrl-frames')">
-								<div class="headertext">Funktioner</div>
-							</div>
-							<div id="adminmenuTreeNode"></div>
-							<!-- Column 2 end --></div>
-
-					</div>
-					<div id="col3" style="display:none">
-						<!-- Column 3 start -->
-						<!-- Column 3 end -->
-					</div>
-					<!--					<div id="appErrorDiv" class="apperror"></div>-->
-
-				</div>
+		<div data-dojo-type="dijit._WidgetBase" style="width: 180px;"
+			  data-dojo-props="splitter:true, region:'left'" id="mainleftColumn"
+			  class="dijitBorderContainer-child">
+			<div class="paneHeader">
+				<div class="headertext">Funktioner</div>
 			</div>
+			<div id="adminmenuTreeNode"></div>
+		</div>
+		<!--		<div id="mainContentPane" style="padding: 0; margin: 0" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="parseOnLoad: false, splitter: true,region: 'center'">
+					sample
+				</div>-->
+		<div data-dojo-type="dijit._WidgetBase" data-dojo-props="splitter: false,region: 'bottom'" class="footer">
+			Copyrights mSigsgaard web-udvikling 2009-2014 - All rights served
 		</div>
 	</div>
-	<div class="footer">
-		Copyrights mSigsgaard web-udvikling 2009-2014 - All rights served
 
-	</div>
 
 </body>
 

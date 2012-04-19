@@ -312,6 +312,9 @@ class Document {
 	private $includepath = "";
 	private $_open = false;
 	private $_attachedTo = 0;
+	private $attributes = array("pageid", "attachId", "type", "title", "alias",
+		 "isdraft", "tocpos", "body", "creator", "created", "editors",
+		 "lasteditedby", "lastmodified", "keywords", "showtitle", "ft_lastmodified");
 
 	function __construct($id = null) {
 		global $CONFIG;
@@ -505,7 +508,7 @@ class Document {
 			return null;
 		}
 		$parent = $this->getParentDocument();
-		while(($parent != null && $parent->type != "page")) {
+		while (($parent != null && $parent->type != "page")) {
 			$parent = $parent->getParentDocument();
 		}
 		return $parent;

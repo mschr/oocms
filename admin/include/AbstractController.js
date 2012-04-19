@@ -5,17 +5,18 @@ define(["dojo/_base/declare",
 	"dojo/dom-construct",
 	"dojo/dom-geometry",
 	"dojo/dom-style",
-	"dojo/query"], function(declare, ddeferred, registry, ddom, ddomconstruct, ddomgeom, ddomstyle, $){
+	"dijit/layout/BorderContainer",
+	"dojo/query"], function(declare, ddeferred, registry, ddom, ddomconstruct, ddomgeom, ddomstyle, djbordercontainer, $){
 		// TODO create subscrive / publish chan for contentpane.onload
 		
 //		has.add("dom-qsa2.1")
 //		has.add("dom-qsa3")      CSS ENGINE
-		var AbstractController = declare("OoCmS.AbstractController", [], {
+		var AbstractController = declare("OoCmS.AbstractController", [djbordercontainer], {
 			observers: [],
 			dijitrdyId: null,
 			_rdypoll:null,
 			constructor: function(args) {
-				this.containerNode = dojo.byId('mainContentPane');
+
 				// setup ready.then resolve
 				this.ready = new ddeferred();
 				this.ready.then(dojo.hitch(this, this.postCreate));				
@@ -45,8 +46,8 @@ define(["dojo/_base/declare",
 			},
 			postCreate: function postCreate() {
 				console.log('postcreate deferred', this);
-				this.observers.push(dojo.connect(window, "onresize", this, this.layout));
-				this.layout();
+//				this.observers.push(dojo.connect(window, "onresize", this, this.layout));
+//				this.layout();
 			},
 			isDirty: function() {
 				console.error("Not Implemented (isDirty)")

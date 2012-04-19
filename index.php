@@ -18,10 +18,14 @@ switch (route_get_request_type()) {
 		static $BODY;
 		require_once $CONFIG['templates'] . "cm.DocumentTemplate.php";
 		require_once $CONFIG['templates'] . "cm.ResourceTemplate.php";
-		try {
-			$BODY = new Document(route_get_body_id());
-		} catch (Exception $e) {
-			route_to_location("error.php?id=404&returnUrl=" . rawurlencode($_SERVER['REQUEST_URI']));
+		if(route_is_preview_request()) {
+			route_get_body_preview($BODY = new Document());
+		} else {
+			try {
+				$BODY = new Document(route_get_body_id());
+			} catch (Exception $e) {
+				route_to_location("error.php?id=404&returnUrl=" . rawurlencode($_SERVER['REQUEST_URI']));
+			}
 		}
 		$DOC = ($BODY->type == "subpage" ? $BODY->getToplevelDocument() : $BODY);
 		$_SESSION['activeCategory'] = $DOC->pageid;

@@ -17,13 +17,17 @@ define(['dojo/_base/declare',
 	"dijit/Dialog",
 	"dojo/data/ItemFileReadStore",
 	"dijit/tree/ForestStoreModel",
-	"dijit/Tree", 
+	"dijit/Tree",
+	"dijit/layout/ContentPane",
+	"dijit/layout/BorderContainer", // markup require
 	"dijit/form/ComboBox",				// markup require
 	"dojox/layout/ContentPane",     // markup require
 	"dijit/form/ValidationTextBox", // markup require
 	"dijit/form/Button"             // markup require
 
-	], function(declare, parser, dregistry, ddom, dlang, ddomgeometry, dstyle, dxhr, darray, dconnect, dioquery, $, dtopic, ootoolkit, oomessagebus,/* ooconfig, oopage, oopagetree, ooassets,*/ ttip, dialog, store, model, tree){
+	], function(declare, parser, dregistry, ddom, dlang, ddomgeometry, dstyle, dxhr,
+		darray, dconnect, dioquery, $, dtopic, ootoolkit, oomessagebus,
+		/* ooconfig, oopage, oopagetree, ooassets,*/ djttip, djdialog, dstore, djforestmodel, djtree, djcontentpane){
 
 		var Controller = declare("OoCmS.application", [ootoolkit, oomessagebus], {
 
@@ -35,6 +39,7 @@ define(['dojo/_base/declare',
 
 			urlPreloads: {},
 			_widgetInUse: undefined,
+			defaultPaneProps: {},
 			/*
 			page: null,
 			pagetree: null,
@@ -47,8 +52,8 @@ define(['dojo/_base/declare',
 			template: null,
 		 */
 			constructor: function constructor(args) {
-//				console.info(traceLog(this,arguments));
-				var self = this, tmp;
+				traceLog(this,arguments)
+				var tmp;
 				this.URI = new dojo._Url(dojo.doc.location.href);
 				
 				if(this.URI.query) {
@@ -63,29 +68,65 @@ define(['dojo/_base/declare',
 						presets: tmp["presets"]
 					});
 				}
+				this.defaultPaneProps = {
+					region: 'center',
+					id: 'mainContentPane',
+					splitter:true,
+					onLoad: dlang.hitch(this, this.paneLoaded)
+				}
 
-
-				this.menustore = new store( {
+				this.buildRendering(args.menudata);
+				
+				if(this.urlPreloads.action) {
+					this.paneRequested(this.urlPreloads.action);
+				// do an extra lazy layout
+				//					dojo.ready(function() {
+				//						setTimeout(function() {
+				//							self.layout();
+				//						},1200)
+				//					});
+				} else { // debug
+					//						setTimeout(unittest, 550);
+					this.paneRequested();
+				}
+			},
+			buildRendering: function buildRendering(menudata) {
+				var self = this,
+				adminmenutooltipbuild = function(node) { 
+					var content, item = node.item;
+					if(item && !item.root) {
+						content = self.menustore.getValue(node.item, "tooltip");
+						if(content != null && content.length > 0) {
+							new djttip({
+								label: "<div style=\"min-width: 120px; min-height: 64px;\">"+ content +"</div>",
+								connectId: node.domNode
+							}).startup();
+						}
+					}
+					darray.forEach(node.getChildren(), adminmenutooltipbuild); 
+				}
+				this.menustore = new dstore( {
 					id: "adminmenuStore",
 					data: {
 						identifier: 'id', 
 						label : 'label', 
-						items: args.menudata
+						items: menudata
 					}
 
 				});
 
-				this.menumodel = new model({
+				this.menumodel = new djforestmodel({
 					id:"adminmenuModel",
 					store:this.menustore
 				});
-				this.menutree = new tree( {
+				this.menutree = new djtree( {
 					id:"adminmenuTree",
 					openOnClick:true,
 					model:this.menumodel,
 					showRoot:false,
 					persist:false,
 					autoExpand:true,
+					onClick: dlang.hitch(this, this.paneRequested),
 					getIconClass : function getIconClass(item, opened) {
 						var iconcls = (item&&item.icon ? item.icon + "" : "");
 						if((!item || this.model.mayHaveChildren(item))) {
@@ -100,85 +141,62 @@ define(['dojo/_base/declare',
 
 					}
 				}).placeAt('adminmenuTreeNode');
-				this.fixWidget(this.menutree, true);
-				this.menutree.onClick = dlang.hitch(this, this.paneRequested);
-
-				var adminmenutooltipbuild = function(node) { 
-					var content, item = node.item;
-					if(item && !item.root) {
-						content = self.menustore.getValue(node.item, "tooltip");
-						if(content != null && content.length > 0) {
-							new ttip({
-								label: "<div style=\"min-width: 120px; min-height: 64px;\">"+ content +"</div>",
-								connectId: node.domNode
-							}).startup();
-						}
-					}
-					darray.forEach(node.getChildren(), adminmenutooltipbuild); 
-				}
+				//				this.fixWidget(this.menutree, true);
+				
 				adminmenutooltipbuild(this.menutree.rootNode);
 				
-				this.contentpane = dregistry.byId('mainContentPane');
-				this._pageframe = {
-					outer : ddom.byId('outerWrap'),
-					left : ddom.byId('mainleftColumn'),
-					center : ddom.byId('mainContentPane')
-				}
-				dconnect.connect(window, "onresize", this, this.layout);
-				dconnect.connect(this.contentpane, "onLoad", dlang.hitch(this, this.paneLoaded));
-				this.layout();
-				if(this.urlPreloads.action) {
-					this.paneRequested(this.urlPreloads.action);
-				// do an extra lazy layout
-				//					dojo.ready(function() {
-				//						setTimeout(function() {
-				//							self.layout();
-				//						},1200)
-				//					});
-				} else { // debug
-					//						setTimeout(unittest, 550);
-					this.contentpane.set("href", 'views/frontpage.php');
-				}
+
+			//				dconnect.connect(this.contentpane, "onLoad", dlang.hitch(this, this.paneLoaded));
 			},
 			destroy: function destroy() {
 				if(this._widgetInUse) {
 					this._widgetInUse.unload();
+					this._widgetInUse.destroyRecursive();
 				}
 				this.menutree.model.store.close();
 				this.menutree.destroyRecursive();
 				this.inherited();
 			},
-			layout: function layout() {
-				var mask = $(".colmask")[0];
-				// set subtraction according to top header and bottom footer 
-				dstyle.set(mask, "height", (dojo.position(dojo.body()).h - 40 - 20) + "px");
-				$(".adminBox").forEach(function(box) {  
-					dstyle.set(box, "height", (
-						ddomgeometry.getMarginBox(mask).h
-						- ddomgeometry.getMarginExtents(box).h
-						- ddomgeometry.getBorderExtents(box).h)+"px")
-				});
-			},
+			//			layout: function layout() {
+			//				var mask = $(".colmask")[0];
+			//				// set subtraction according to top header and bottom footer 
+			//				dstyle.set(mask, "height", (dojo.position(dojo.body()).h - 40 - 20) + "px");
+			//				$(".adminBox").forEach(function(box) {  
+			//					dstyle.set(box, "height", (
+			//						ddomgeometry.getMarginBox(mask).h
+			//						- ddomgeometry.getMarginExtents(box).h
+			//						- ddomgeometry.getBorderExtents(box).h)+"px")
+			//				});
+			//			},
 			unloadPane: function unloadPane() {
-//				console.info(traceLog(this,arguments));
+				console.warn('================= UNLOADING ==============');
 				try {
-				if(!this._widgetInUse) return;
-				if(typeof this._widgetInUse != "undefined")
-					this._widgetInUse.unload();
-				delete this._widgetInUse;
-				this._widgetInUse = null;
-				darray.forEach(this._widgetfixObservers, dconnect.disconnect);
-				}catch(err) {}
+					if(this._widgetInUse) {
+						
+						if(dlang.isFunction(this._widgetInUse.unload))
+							this._widgetInUse.unload();
+						if(dlang.isFunction(this._widgetInUse.destroyRecursive))
+							this._widgetInUse.destroyRecursive();
+
+					} 
+					if(this.contentpane!=null&&dlang.isObject(this.contentpane))
+						this.contentpane.destroy();
+					//					delete this._widgetInUse;
+					//					this._widgetInUse = null;
+					darray.forEach(this._widgetfixObservers, dconnect.disconnect);
+				}catch(err) {
+					console.error(err);
+				}
 			},
 			
 			showLoginDialog: function(args) {
-//				console.info(traceLog(this,arguments));
+				//				traceLog(this,arguments)
 				args = args || {};
 				dtopic.publish("notify/progress/done");
 				if(this.contentpane == null) { // weird scope or something *bugfix*
 					this.contentpane = dregistry.byId('mainContentPane')
 				}
-				var _dialog = dregistry.byId('loginDialog') || new dialog({
+				var _dialog = dregistry.byId('loginDialog') || new djdialog({
 					title: 'Login required',
 					style:"width:90%;height:90%;", 
 					className:'loginDialog',
@@ -237,31 +255,69 @@ define(['dojo/_base/declare',
 				return true;
 
 			},
+			_init: function() {
+				//	called upon modules load / pane request, we wait with rendering 'till
+				// this late to hide body untill fully ready to show contents
+				// bootstrap sequence:
+				//  hide everything, await domReady whilst loading kernel plus static messagebus.loading modules
+				//  load application and its requirements
+				ddom.byId('border').style.display="";
+				parser.parse();
+				this.layout = dregistry.byId('border');
+				this._initialized = true;
+			},
 			paneRequested: function paneRequested(item){
-//				console.info(traceLog(this,arguments));
+				if(this.loading) return
+				this.loading = true;
+				traceLog(this,arguments)
+				
 				var url,
 				self = this,
 				modules = [],
-				yes=function() {
-					dtopic.publish("notify/progress/loading");
-					self._wPurge(self._dialog, true);
-					self.unloadPane();
+				renderLayout = function() {
 					if(modules && modules.length > 0) {
-//						alert(require.toString())
-//						if(dojo.isIE) require(modules, function() {
-//							self.contentpane.set("href", url);
-//						})
-//						else 
-						require(modules, function() {
-							self.contentpane.set("href", url);
+						require(modules, function(toprequire) {
+							console.warn('================= RENDERING ==============');
+							if(!self._initialized) self._init()
+							if(url) 
+								self.layout.addChild(self.contentpane = new djcontentpane(
+									dlang.mixin(self.defaultPaneProps, {
+										href: url
+									}))
+								);
+							else {
+								self._widgetInUse = new toprequire({
+									region: 'center', 
+									splitter:true
+								})
+								self.layout.addChild(self._widgetInUse);
+								self.paneLoaded();
+							}
 						});
 					}
-					else self.contentpane.set("href", url);
+				},
+				yes=function() {
+					dtopic.publish("notify/progress/loading");
+					
+					self._wPurge(self._dialog, true);
+					self.unloadPane();
+					console.warn('================== LOADING ===============');
+					if(modules && modules.length > 0) {
+						// detach and give a moment to clear registry
+						setTimeout(renderLayout, 450);
+					} else {
+						if(!self._initialized) self._init();
+						self.layout.addChild( self.contentpane = new djcontentpane(
+							dlang.mixin(self.defaultPaneProps, {
+								href: url
+							}))
+						);
+					}
 				};
 				if(!this._widgetInUse || !this._widgetInUse.isDirty()) {
 					dtopic.publish("notify/progress/loading");
 				}
-				this.action = typeof item == "string" ? item : this.menustore.getValue(item, "action");
+				if(item) this.action = typeof item == "string" ? item : this.menustore.getValue(item, "action");
 				/* evaluate the action on item clicked */
 				switch(this.action) {
 					case 'setup':
@@ -275,11 +331,11 @@ define(['dojo/_base/declare',
 					
 					case 'page':
 						modules = ["OoCmS/page"];
-						url = "views/page.php?form=page";
+						//						url = "views/page.php?form=page";
 						break;
 					case 'pagetree':
 						modules = 	["OoCmS/pagetree"];
-						url = "views/page.php?form=pagetree";
+						//						url = "views/page.php?form=pagetree";
 						break;
 
 					case 'productcategory':
@@ -290,7 +346,7 @@ define(['dojo/_base/declare',
 						break;
 					case 'assets':
 						modules =["OoCmS/assets"];
-						url = "views/assets.php"
+						//						url = "views/assets.php"
 						break;
 
 					default:
@@ -308,11 +364,11 @@ define(['dojo/_base/declare',
 				} else {
 					yes();
 				}
-				self.layout();
+			//				self.layout();
 			},
 			paneLoaded: function paneLoaded() {
-//				console.info(traceLog(this,arguments));
-				parser.parse(this.contentpane.domNode)
+				traceLog(this,arguments)
+				//				parser.parse(this.contentpane.domNode)
 				var self = this, w = null, notLoggedIn = ddom.byId('iamloginpage');
 				if(notLoggedIn != null) {
 					notLoggedIn.parentNode.removeChild(notLoggedIn)
@@ -331,23 +387,18 @@ define(['dojo/_base/declare',
 						w = self._widgetInUse = new OoCmS.templatecfg();
 						break;
 					case 'page':
-						w = self._widgetInUse = new OoCmS.page();
-						w.bindDom(ddom.byId('formWrapper'));
-						w.ready.then(function() {
-							if(self.urlPreloads.id && self.urlPreloads.id.length > 0)
-								w.read(self.urlPreloads.id)
-							else if(self.urlPreloads.presets && self.urlPreloads.presets.length > 0) {
-								darray.forEach(self.urlPreloads.presets.split(","), function(kv) {
-									w[kv.split(";")[0]]=kv.split(";")[1]
-								})
-								w.resetForm();
-								w.updateUI();
-							}
-						});
+						w = self._widgetInUse;
+						if(self.urlPreloads.id && self.urlPreloads.id.length > 0)
+							w.read(self.urlPreloads.id)
+						else if(self.urlPreloads.presets && self.urlPreloads.presets.length > 0) {
+							darray.forEach(self.urlPreloads.presets.split(","), function(kv) {
+								w[kv.split(";")[0]]=kv.split(";")[1]
+							})
+							w.resetForm();
+							w.updateUI();
+						}
 						break;
 					case 'pagetree':
-						w = self._widgetInUse = new OoCmS.pagetree();
-						w.bindDom(ddom.byId('pagetreeWrapper'));
 						//							w.ready.then(function() {
 						//								// TODO phase out...
 						//								self.fixWidget(w.getPageSelector())
@@ -363,7 +414,7 @@ define(['dojo/_base/declare',
 						w.bindDom(ddom.byId('productformWrapper'));
 						break;
 					case 'assets':
-						w = self._widgetInUse = new OoCmS.assets();
+						w = self._widgetInUse
 						break;
 
 					default:
@@ -429,12 +480,14 @@ define(['dojo/_base/declare',
 				//					default:
 				//						dtopic.publish("notify/progress/done");
 				//				}
-				if(w) {
+				if(w && w.ready) {
 					w.startup();
 					w.ready.then(function() {
 						dtopic.publish("notify/progress/done");
 					})
-				}
+				} else dtopic.publish("notify/progress/done");
+				console.warn('================   READY   ===============');
+				this.loading = false;
 			}
 		});
 		return Controller;

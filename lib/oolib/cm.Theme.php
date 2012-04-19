@@ -519,11 +519,15 @@ class Theme {
 								  "src" => "{$CONFIG['dojoroot']}" . "dojo/dojo.js"), "", false))
 				  ->addChild(ScriptTag::create("text/javascript", "{$CONFIG['relurl']}" .
 										"include/prototyping.js"))
+//				  ->addChild(ScriptTag::create("text/javascript", "{$CONFIG['relurl']}" .
+//										"lib/dojoextensions/dojobase.js.uncompressed.js"))
+//				  ->addChild(ScriptTag::create("text/javascript", "{$CONFIG['relurl']}" .
+//										"lib/dojoextensions/formwidgets.js.uncompressed.js"))
 				  ->addChild(ScriptTag::create("text/javascript", null, "")
 							 ->setInnerHTML("var gPage = {\n\tbaseURI:'{$CONFIG['relurl']}'\n};\n"))
 				  ->addChild(Node::create("comment", null, "Application bootstrap"))
 				  ->addChild(ScriptTag::create("text/javascript", "{$CONFIG['relurl']}" .
-										"admin/include/bootstrap.js"));
+										"admin/include/bootstrap.js.php"));
 		// add reset global stylesheet
 		$root->addChild(Node::create("comment", null, "Styles"))
 				  ->addChild(LinkTag::create("stylesheet", "{$CONFIG['relurl']}" .

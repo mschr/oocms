@@ -518,13 +518,11 @@ define(["dojo/_base/declare"], function(declare){
 		},
 		showHighlightPreview: function showHighlightPreview(responseBody) {
 			console.info(traceLog(this,arguments));
-			//			dojo.require("dojox.highlight");
-			//			dojo.require("dojox.highlight.languages.css");
-			//			dojo.require("dojox.highlight.languages.javascript");
+
 			require([
 				"dojox/highlight",
-				"dojox/highlight.languages.css",
-				"dojox/highlight.languages.javascript",
+				"dojox/highlight/languages/css",
+				"dojox/highlight/languages/javascript",
 				"dojox/widget/Dialog"
 				], function(highlight, langcss, langjs, xdialog){
 					var overlay = dojo.byId('loadOverlay');

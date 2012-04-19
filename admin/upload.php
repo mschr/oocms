@@ -62,13 +62,17 @@ $upload_path = "../fileadmin/";  // where image will be uploaded, relative to th
 if (empty($_GET['uploadtype']) || empty($_GET['fieldname'])) {
 	header("HTTP/1.1 401 Access Denied");
 	exit;
-} else if(!isset($_FILES[$_GET['fieldname']])) {
+} else if(!isset($_FILES[$_GET['fieldname']]) // auto guess if single html
+		  && ($_GET['uploadtype']=="html5" && !isset($_FILES['uploadedfile']))) {
 	echo "{}&&{}";
+	exit;
 }
 $type = $_GET['uploadtype'];
 $directory = $_POST['directory'];
 if ($directory != "" && $directory != ".") {
 	$upload_path .= $directory;
+	if(!preg_match("/\/$/", $upload_path)) $upload_path.="/";
+	
 }
 // HTML and upload.php are same location
 $download_path = $upload_path;
@@ -135,6 +139,7 @@ if ($type == "flash") {
 	$htmldata = array();
 
 	for ($i = 0, $cnt = 0; $i < count($_FILES[$fieldName]['name']); $i++, $cnt++) {
+		fb($_FILES[$fieldName]['name'][$i], "file");
 		$moved = move_uploaded_file($_FILES[$fieldName]['tmp_name'][$i], $upload_path . $_FILES[$fieldName]['name'][$i]);
 		fb("moved:" . $moved . "  " . $_FILES[$fieldName]['name'][$i]);
 		if ($moved) {
@@ -180,12 +185,11 @@ if ($type == "flash") {
 
 
 
-	fb("HTML single POST:");
-	fb($postdata, true);
+	fb("HTML single POST");
 
 	$name = $_FILES['uploadedfile']['name'];
 	$file = $upload_path . $name;
-	$type = getImageType($file);
+	$type = getFileType($file);
 	try {
 		list($width, $height) = getimagesize($file);
 	} catch (Exception $e) {
@@ -200,70 +204,14 @@ if ($type == "flash") {
 	$htmldata['height'] = $height;
 	$htmldata['type'] = $type;
 	$htmldata['size'] = filesize($file);
-	$htmldata['additionalParams'] = $postdata;
+		echo "{}&&".json_encode($htmldata);
+		exit;
 	
 } else {
 	fb(array("ERROR" => "Improper data sent - no files found", "files" => $_FILES));
 	echo "{}&&{}";
 	return;
 }
-
-//HTML gets a json array back:
-$data = json_encode($htmldata);
-fb("Json Data Returned:");
-fb($data);
-// in a text field:
-//elseif (isset($_FILES['uploadedfile0'])) {
-//	//
-//	//	Multiple files have been passed from HTML
-//	//
-//	$cnt = 0;
-//	fb("HTML multiple POST:");
-//	fb($postdata, true);
-//
-//	$_post = $htmldata;
-//	$htmldata = array();
-//
-//	while (isset($_FILES['uploadedfile' . $cnt])) {
-//		fb("HTML multiple POST");
-//		$moved = move_uploaded_file($_FILES['uploadedfile' . $cnt]['tmp_name'], $upload_path . $_FILES['uploadedfile' . $cnt]['name']);
-//		fb("moved:" . $moved . "  " . $_FILES['uploadedfile' . $cnt]['name']);
-//		if ($moved) {
-//			$name = $_FILES['uploadedfile' . $cnt]['name'];
-//			$file = $upload_path . $name;
-//			$type = getFileType($file); // flat out returns extension
-//			$notimage = false;
-//			try {
-//				list($width, $height) = getimagesize($file);
-//			} catch (Exception $e) {
-//				$width = 0;
-//				$height = 0;
-//				$notimage = true;
-//			}
-//			fb("file: " . $file);
-//
-//			$_post['file'] = $file;
-//			$_post['name'] = $name;
-//			if (!$notimage) {
-//				$_post['width'] = $width;
-//				$_post['height'] = $height;
-//			}
-//			$_post['type'] = $type;
-//			$_post['size'] = filesize($file);
-//			$_post['additionalParams'] = $postdata;
-//			fb($_post, true);
-//
-//			$htmldata[$cnt] = $_post;
-//		} elseif (strlen($_FILES['uploadedfile' . $cnt]['name'])) {
-//			$htmldata[$cnt] = array("ERROR" => "File could not be moved: " . $_FILES['uploadedfile' . $cnt]['name']);
-//		}
-//		$cnt++;
-//	}
-//	fb("HTML multiple POST done:");
-//	foreach ($htmldata as $key => $value) {
-//		fb($value, true);
-//	}
-//}
 ?>
 
 <textarea style="width:600px; height:150px;"><?php print $data; ?></textarea>

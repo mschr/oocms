@@ -9,8 +9,10 @@
 @import url("../../css/fileadmin.css");
 
 html, body {
-	overflow: hidden
+	overflow: hidden;  height: 100%; width: 100%; overflow: hidden; padding: 0; margin: 0
 }
+#border {height: 100%; width: 100%;}
+
 body {
 	width: 100%;
 	height: 100%;
@@ -113,6 +115,17 @@ div.paneHeader.adminTop {
 	left:15px;
 	overflow:hidden;
 }
+.footer {
+	background-color: #8E8EA5;
+	color: whiteSmoke;
+	font-size: small;
+	height: 17px;
+	line-height: 17px;
+	margin: 0;
+	text-align: center;
+	vertical-align: middle;
+	width: 100%;
+}
 #footer {
 	clear:both;
 	float:left;
@@ -124,6 +137,7 @@ div.paneHeader.adminTop {
 #mainContentPane {
 	height: 100%;
 	overflow-y:hidden;
+	background-color: inherit;
 }
 #mainContentPane #leftcolumn,
 #mainContentPane #centercolumn,
@@ -195,6 +209,24 @@ div.paneHeader.adminTop {
 	line-height: 18px;
 	vertical-align: middle;
 }
+.OoCmSPage #widget_attachIdComboBox,
+.OoCmSPage #widget_isdraftcombo {
+	width: 7em;
+}
+.OoCmSPageForm {
+	min-width: 690px;
+}
+.OoCmSPageTree #centercolumn {
+	min-width: 460px;
+	overflow: auto;
+}
+.OoCmSAssetsForm .dojoxUploaderFileList {
+	margin: 5px;
+}
+
+.OoCmSAssetsForm .dojoxUploaderFileListTable {
+	margin-top: 0px;
+}
 .dijitToolbar {
 	padding-left: 5px;
 	padding-bottom: 2px;
@@ -239,6 +271,57 @@ div.dijitTreeRow._treenodeSelected {
 dijitDialog.loginDialog .notify {
 	margin-left: auto !important;
 	min-width: 0 !important;
+}
+
+
+.dojoxFilePicker div.dojoxRollingListPane,
+.dojoxFilePicker .dojoxRollingListContainer {
+	width: 100%;
+	height: 100%;
+	padding:0 !important;
+	overflow-y: auto;
+}
+.dojoxFilePickerPane .dijitMenuTable {
+	width: 100%;
+}
+div.dojoxRollingListContainer {
+	overflow: hidden !important;
+}
+div.dojoxFileInfoPane {
+	width: 100%;
+}
+#resourceFilePickerDialog .dijitContentPane {
+
+}
+.dojoxRollingListPane .dijitMenuItem td {
+	padding-left: 5px !important
+}
+.claro .dojoxFilePickerItem .dojoxFileItemIcon,
+.claro .dojoxFilePickerItem .dojoxDirectoryItemIcon {
+	width: 16px;
+	height: 16px;
+}
+.claro .dojoxFilePickerItem .dijitMenuItemIcon {
+	background-image: url("/dojo/dojox/widget/FilePicker/images/tundraFileIcons.gif");
+	background-repeat: no-repeat;
+}
+.claro .dojoxFilePickerItem .dojoxEmpty {
+	background-image: none;
+}
+.claro .dojoxFilePickerItem .dojoxDirectoryItemIcon {
+	background-position: 0px;
+}
+.claro .dojoxFilePickerItemSelected .dojoxDirectoryItemIcon {
+	background-position: -16px;
+}
+.claro .dojoxFilePickerItem .dojoxFileItemIcon {
+	background-position: -32px;
+}
+.claro .dojoxFilePickerItemSelected .dojoxFileItemIcon {
+	background-position: -48px;
+}
+.dojoxRollingListItemExpanding .dijitMenuArrowCell div {
+	visibility: visible !important;
 }
 .apperror {
 	position:absolute;
@@ -317,8 +400,14 @@ dijitDialog.loginDialog .notify {
 	width: 100%;
 	display: none;
 }
+#loading_parent_label {
+	height: 100%;
+	padding-top: 7px;
+	text-shadow: -1px 0 rgba(0, 0, 0, 0.5), 0 -1px rgba(0, 100, 0, 0.3), 0 1px rgba(255, 255, 255, 0.8), -1px -1px rgba(0, 100, 0, 0.5);
+	filter: dropshadow(color=#333, offx=1, offy=1); 
+}
 /* mceButton-ish metadata table styling */
-tbody.mceLookFeel div.mceButtonStyle {
+.mceLookFeel div.mceButtonStyle {
 	background-color:#cadbee;
 	border-top: 1px solid #a0bce2;
 	border-bottom: 1px solid #a0bce2;
@@ -328,7 +417,7 @@ tbody.mceLookFeel div.mceButtonStyle {
 	height: 46px;
 	padding: 4px;
 }
-tbody.mceLookFeel div.last {
+.mceLookFeel div.last {
 	margin-right: 12px;
 	border-right: 1px solid #a0bce2;
 	-webkit-border-top-right-radius: 3px;
@@ -338,7 +427,7 @@ tbody.mceLookFeel div.last {
 	-moz-border-radius-bottomright: 3px;
 	border-radius-bottomright: 3px;
 }
-tbody.mceLookFeel div.first {
+.mceLookFeel div.first {
 	margin-left: 12px;
 	border-left: 1px solid #a0bce2;
 	-webkit-border-bottom-left-radius: 3px;
@@ -349,7 +438,7 @@ tbody.mceLookFeel div.first {
 	border-radius-topleft: 3px;
 }
 
-tbody.mceLookFeel label {
+.mceLookFeel label {
 	padding-bottom: 4px;
 	padding-left: 4px;
 	font-size: 15px;
@@ -359,17 +448,17 @@ tbody.mceLookFeel label {
 	padding: 2px;
 	font-size: small;
 }
-tbody.mceLookFeel td {
+.mceLookFeel td {
 	padding:0;
 	margin:0;
 	font-size: 14px;
 	/*width: 25% !important;*/
 }
-tbody.mceLookFeel span.dateformat {
+.mceLookFeel span.dateformat {
 	font-size: 0.95em;
 	color: #0d017f;
 }
-tbody.mceLookFeel span.urlformat {
+.mceLookFeel span.urlformat {
 	color: #0d017f;
 	font-style: italic;
 }
@@ -473,8 +562,11 @@ tbody.mceLookFeel ul.mceLinkList {
 .assetsDnD .dndAcceptance.dndDone {
 	border: 2px dashed #47725a;
 }
+
 .OoCmSSimpleInput {
-	margin-top: 0.4em;
+	padding: 0 10px 10px;
+	border: 1px dotted rgb(200,200,200);
+	border-bottom: none;
 }
 .OoCmSSimpleInput .OoCmSSimpleInputLabelNode {
 	text-align: left;
@@ -488,6 +580,45 @@ tbody.mceLookFeel ul.mceLinkList {
 	font-size: 1.1em;
 }
 
+.OoCmSFormDialogResources form div.OoCmSSimpleInput:last-child {
+	border-bottom: 1px dotted rgb(200,200,200);
+}
+.OoCmSFormDialogResources {
+
+}
+.OoCmSFormDialogResources .OoCmSFormDialogResourcesPickerIcon {
+	position: relative;
+	top:6px;
+	left:2px
+}
+.OoCmSFormDialogResources .OoCmSFormDialogResourcesButtonBar {
+	margin-top: 10px;
+	text-align: right;
+}
+
+
+.OoCmSButtonAsset .OoCmSIconAsset {
+	position: relative;
+	top: 2px;
+}
+.OoCmSButtonAsset span.dijitButtonText {
+	padding-top: 10px;
+	padding-bottom: 6px;
+	min-width: 80px;
+}
+.OoCmSButtonAssetRemove {
+	left: -44px;
+	position: relative;
+	top: -13px;
+}
+.OoCmSButtonAssetRemove .dijitButtonNode {
+	padding-right: 0;
+	padding-left: 0;
+}
+.OoCmSButtonAssetRemove .dijitIcon {
+	position: relative;
+	left: 4px;
+}
 .OoIcon-18, .OoIcon-24, .OoIcon-48 {
 	background-repeat: no-repeat;
 	text-align: center;

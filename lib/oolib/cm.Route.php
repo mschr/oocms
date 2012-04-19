@@ -58,6 +58,15 @@ function route_get_product_id() {
 	}
 	return -1;
 }
+
+function route_get_body_preview(Document &$document) {
+	foreach($document->get_attributes() as $attr) {
+		if(!empty($_POST[$attr])) $document->$attr = $_POST[$attr];
+	}
+}
+function route_is_preview_request() {
+	return !empty($_GET['previewfetch']) && $_GET['previewfetch'] == 1;
+}
 function route_is_async_request() {
 	return !empty($_GET['subpagefetch']) && $_GET['subpagefetch'] == 1;
 }

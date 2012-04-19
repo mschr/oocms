@@ -1,113 +1,117 @@
-if(typeof window.console != "object") {
-	window.console = {
-		log : function(s) { },
-		info : function(s) { },
-		error : function(s) { }
-	};
-}
-Date.prototype.sqlToDate = function(str) {
-	var spl = str.split(" ");
-	if(spl.length < 2) return "";
-	var date = spl[0].split("-");
-	var time = spl[1].split(":");
-	this.setDate(date[2]);
-	this.setMonth(date[1]-1)
-	this.setYear(date[0])
-	this.setHours(time[0])
-	this.setMinutes(time[1])
-	this.setSeconds(time[2])
-	return this.asString();
-}
-//Object.prototype.__getName = function() { 
-//   var funcNameRegex = /function (.{1,})\(/;
-//   var results = (funcNameRegex).exec((this).constructor.toString());
-//   return (results && results.length > 1) ? results[1] : "";
-//};
-Date.prototype.asString = function() { // stip GMT or UTC from a date
-	return this.toString().replace(/\ [GU].*/, "");
-}
-require([
-'dojo/_base/kernel'
-], function(kernel) {
-	// level 1
-	var location = document.location.protocol + "//" + document.location.host + gPage.baseURI + "admin/include";
-
-	console.log('================ kernel READY ============== Loader set to ' + location)
-	require({
-		packages: [ {
-			name: 'OoCmS', 
-			location: location
-		} ]
-	}, ['dojo/_base/window',
-	'dojo/_base/declare', 
-	"OoCmS/application",
-	"dojo/parser",
-	'dojo/domReady!'
-
-
-	], 
-	function(win, declare, application, dparser){
-		console.log('================ DOM/App READY ==============')
-		// level 3
-		dparser.parse();
-		window.ctrl = new application({
-			menudata: 
-			/* -------------------------------<*/[  {
-				label: 'Sider',
-				id: '2',
-				children:  [ { 
-					id: '2.1',
-					label: 'Opsætning',
-					tooltip:'Rediger/Slet/Tilføj sider',
-					action:'page'
-				}, {
-					id: '2.2',
-					label: 'Hieraki',
-					icon: 'dijitIconFilter',
-					tooltip:'Arranger siders relation ift hverandre',
-					action: 'pagetree'
-				} ]
+<?php 
+header("Content-Type: application/javascript;charset=UTF-8");
+require_once("../../include/config.inc.php");
+$live = preg_match("/deploy/", $CONFIG['dojoroot']); 
+	?>
+	var menudata = [  {
+		label: 'Sider',
+		id: '2',
+		children:  [ { 
+				id: '2.1',
+				label: 'Opsætning',
+				tooltip:'Rediger/Slet/Tilføj sider',
+				action:'page'
 			}, {
-				label: 'Produkter',
-				id: '3',
-				children: [ {
-					id: '3.1',
-					label: 'Opsætning',
-					icon: 'OoIcon-24 OoIconProduct',
-					tooltip:'Rediger/Slet/Tilføj produkter',
-					action:'product'
-				}, { 
-					id: '3.2',
-					label: 'Gruppering',
-					icon: 'OoIcon-24 OoIconProductCategory',
-					tooltip:'Opret/Slet produktgruppering og mærk eksisterende produkter med disse labels',
-					action:'productcategory'
-				} ]
-			} ,{
-				label: 'Domæne',
-				id: '1',
-				children:  [ {
-					id: '1.1',
-					label: 'Opsætning',
-					icon: 'dijitIconFunction',
-					tooltip: 'Tilpas meta-tags, ejerskab og standard indstillinger for domænet',
-					action: 'setup'
-				}, {
-					id: '1.2',
-					label: 'Template',
-					tooltip: 'Specificér CSS dokumenter, layout-template mv.',
-					action: 'template'
-				}, {
-					id: '1.3',
-					label: 'Filer',
-					tooltip: 'Naviger under fileadmin.',
-					action: 'assets'
-				}]
-			/* -------------------------------<*/} ]
-		}); // level 5 (new application)
-	}); // level 3
-}); // level 1
+				id: '2.2',
+				label: 'Hieraki',
+				icon: 'dijitIconFilter',
+				tooltip:'Arranger siders relation ift hverandre',
+				action: 'pagetree'
+			} ]
+	}, {
+		label: 'Produkter',
+		id: '3',
+		children: [ {
+				id: '3.1',
+				label: 'Opsætning',
+				icon: 'OoIcon-24 OoIconProduct',
+				tooltip:'Rediger/Slet/Tilføj produkter',
+				action:'product'
+			}, { 
+				id: '3.2',
+				label: 'Gruppering',
+				icon: 'OoIcon-24 OoIconProductCategory',
+				tooltip:'Opret/Slet produktgruppering og mærk eksisterende produkter med disse labels',
+				action:'productcategory'
+			} ]
+	} ,{
+		label: 'Domæne',
+		id: '1',
+		children:  [ {
+				id: '1.1',
+				label: 'Opsætning',
+				icon: 'dijitIconFunction',
+				tooltip: 'Tilpas meta-tags, ejerskab og standard indstillinger for domænet',
+				action: 'setup'
+			}, {
+				id: '1.2',
+				label: 'Template',
+				tooltip: 'Specificér CSS dokumenter, layout-template mv.',
+				action: 'template'
+			}, {
+				id: '1.3',
+				label: 'Filer',
+				tooltip: 'Naviger under fileadmin.',
+				action: 'assets'
+			}]
+	} ];
+// <?php if(!$live) {  //////////// Dev Version ///////////////
+// ?> 
+	
 
+var cconfig = {
+
+	packages: [ {
+			name: 'OoCmS', 
+			location: document.location.protocol + "//" + document.location.host +
+				gPage.baseURI + "admin/include"
+		} ]
+
+	
+};
+	
+require([
+	'dojo',
+	'dojo/_base/kernel',
+	'dojo/domReady!' ], function(dojo, kernel) {
+	console.warn('================ kernel READY ==============')
+	dojo.body().style.display="none";
+	require(cconfig, [
+		'OoCmS/_messagebus'
+
+	], function(mbusloading) {
+		
+		// level 1
+		// show body but not borderlayout (for progressmeter)
+		dojo.body().style.display="";
+		dojo.byId('border').style.display = "none"
+		mbusloading.loading({
+			progress: 1,
+			maximum: 5
+		});
+
+	
+		require(cconfig , [ 
+			"dojo/parser",
+			"OoCmS/application"
+		], function(dparser, application){
+			console.warn('================ App READY ==============')
+			// level 3
+			mbusloading.loading({
+				progress: 3,
+				maximum: 5
+			});
+			window.ctrl = gPage.app = new application({
+				menudata: menudata
+					
+			}); // level 5 (new application)
+			mbusloading.loading({
+				progress: 4,
+				maximum: 5
+			});
+		}); // level 3
+	}); // level 1
+}); // domready
 function traceLog(obj, args) {
 	try {
 		var i, len = obj.constructor._meta.bases ? obj.constructor._meta.bases.length : 0,
@@ -146,15 +150,15 @@ function traceLog(obj, args) {
 				paranthesis += "Event"; 
 			}else if(args[i] instanceof RegExp) {
 				paranthesis += "RegExp"; 
-//			} else if((typeof Node === "object" && args[i] instanceof Node) 
-//				|| (typeof args[i].nodeType === "number" && typeof args[i].nodeName==="string")) {
-//				paranthesis += "Node";
-//			} else if((typeof HTMLElement === "object" && args[i] instanceof HTMLElement)
-//				|| (args[i].nodeType === 1 && typeof args[i].nodeName==="string")) {
-//				paranthesis += "HTMLElement";
-//			} else if((typeof Node === "object" && args[i] instanceof Node)
-//				|| (typeof args[i].nodeType != "undefined" && typeof args[i].nodeName==="string")) {
-//				paranthesis += "Node";
+				//			} else if((typeof Node === "object" && args[i] instanceof Node) 
+				//				|| (typeof args[i].nodeType === "number" && typeof args[i].nodeName==="string")) {
+				//				paranthesis += "Node";
+				//			} else if((typeof HTMLElement === "object" && args[i] instanceof HTMLElement)
+				//				|| (args[i].nodeType === 1 && typeof args[i].nodeName==="string")) {
+				//				paranthesis += "HTMLElement";
+				//			} else if((typeof Node === "object" && args[i] instanceof Node)
+				//				|| (typeof args[i].nodeType != "undefined" && typeof args[i].nodeName==="string")) {
+				//				paranthesis += "Node";
 			} else if(typeof args[i] == "object") {
 				paranthesis += "hash";
 			}else {
@@ -167,8 +171,8 @@ function traceLog(obj, args) {
 	
 		if(args.length != 0) {		
 			res = [ objName+calleeName+paranthesis, {
-				a: args
-			}];
+					a: args
+				}];
 		} else {
 			res=[objName+calleeName+paranthesis];
 		}
@@ -203,13 +207,121 @@ function traceLog(obj, args) {
 				callstack.push(fn.substring(fn.indexOf("function") + 8, fn.indexOf('')) || 'anonymous');
 			}
 			//Remove call to printStackTrace()
-			return [callstack[1], args];// skip traceLog
+			console.info(callstack[1], args);	
 		} catch(failed) {
-			return ["anonymous", obj, args];	
+			console.info("anonymous", obj, args);	
 		} finally {
 			
 		}
 	}
-	return res;
+	console.info(objName+calleeName+paranthesis);
+	if(args.length > 0) console.info(args)
 }
-console.log('eval bootstrap.js');
+// <? } else { //////////// Live Version ///////////////
+//  ?>  
+		
+require([
+	'dojo',
+	'OoCmS/init1',
+	'OoCmS/init3',
+	'OoCmS/init5',
+	'dojo/domReady!' ], function(dojo) {
+	console.warn('================ kernel READY ==============')
+	dojo.body().style.display="none";
+	require([
+		'OoCmS/_messagebus',
+		'OoCmS/application'
+	], function(mbusloading, application) {
+		console.warn('================ App READY ==============')
+		// show body but not borderlayout (for progressmeter)
+		dojo.body().style.display="";
+		dojo.byId('border').style.display = "none"
+		mbusloading.loading({
+			indeterminate: true
+		});
+		window.ctrl = gPage.app = new application({
+			menudata: menudata
+		}); // level 5 (new application)
+	});
+}); // domready
+	
+function traceLog(obj, args) { }
+	
+// <? } ?> 
+	
+if(typeof window.console != "object") {
+	window.console = {
+		log : function(s) { },
+		info : function(s) { },
+		error : function(s) { }
+	};
+}
+Date.prototype.sqlToDate = function(str) {
+	var spl = str.split(" ");
+	if(spl.length < 2) return "";
+	var date = spl[0].split("-");
+	var time = spl[1].split(":");
+	this.setDate(date[2]);
+	this.setMonth(date[1]-1)
+	this.setYear(date[0])
+	this.setHours(time[0])
+	this.setMinutes(time[1])
+	this.setSeconds(time[2])
+	return this.asString();
+}
+Date.prototype.asString = function() {
+	return this.toString().replace(/\ [GU].*/, "");
+}
+if(typeof String.prototype.trim !== 'function') {
+	String.prototype.trim = function() {
+		return this.replace(/^\s+|\s+$/g, ''); 
+	}
+}
+
+function evtTarget(e)
+{
+	var targ;
+	if (!e)
+		var e=window.event;
+	if (e.target)
+		targ=e.target;
+	else if (e.srcElement)
+		targ=e.srcElement;
+	if (targ.nodeType==3) // defeat Safari bug
+		targ = targ.parentNode;
+	return targ;
+}
+function evtElement(e, tagOfParent, classOfParent) {
+	var t;
+	if(!e) e = window.event;
+	t = e.target || e. srcElement;
+	if(t.nodeType==3)t=t.parentNode;
+	if(tagOfParent){
+		var iter = 0;
+		do {
+			if(t.nodeType==1 && t.tagName.toLowerCase() == tagOfParent.toLowerCase()){
+				if(!classOfParent){
+					return t;
+				}else if(t.className!=null&&t.className!=""&&RegExp("([\ ]|^)"+classOfParent+"([\ ]|$)").test(t.className)){
+					return t;
+				}
+			}
+		} while((t = t.parentNode) !=null && iter++ < 1000)
+		}
+		return t;
+	}
+	function capMouse(e) {
+		if(document.layers){
+			return [e.pageX,e.pageY]
+		}else if(document.all){
+			return [window.event.x+document.body.scrollLeft, window.event.y+document.body.scrollLeft];
+		}else{
+			return [e.pageX,e.pageY]
+		}
+	}
+	function loadCSS(url) {
+		var h = document.getElementsByTagName('head')[0];
+		var links = dojo.query('link[href="'+url+'"]');
+		if(links.length > 0) return;
+		var link = dojo.create("link", { rel: 'stylesheet', href:url}, h, 'last');
+	}

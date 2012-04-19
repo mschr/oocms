@@ -1,46 +1,12 @@
-require(["dojo/_base/declare",
-	"dijit/Editor",
-	"dijit/_editor/plugins/EnterKeyHandling",
-	"dijit/_editor/plugins/TextColor",
-	"dijit/_editor/plugins/LinkDialog",
-	"dijit/_editor/plugins/FontChoice",
-	"dijit/_editor/plugins/ViewSource",
-	"dojox/editor/plugins/Save",
-	"dojox/html/entities",
-	"dojox/editor/plugins/TextColor",
-	"dojox/editor/plugins/FindReplace",
-	"dojox/editor/plugins/InsertEntity",
-	"dojox/editor/plugins/PasteFromWord",
-	"dojox/editor/plugins/PrettyPrint",
-	"dojox/editor/plugins/ToolbarLineBreak",
-	"dojox/editor/plugins/Preview"], 
-	function(declare, editor, plugEnter, plugColor, plugLink, plugFont, plugView, xplugSave) {
-		var mySavePlugin = declare("mySavePlugin", [xplugSave],{
-			save: function(content){
-				dojo.publish("editor/save")
-			}
-		});
-
-		dojo.subscribe(dijit._scopeName + ".Editor.getPlugin", null, function(o){
-			if(o.plugin){
-				return;
-			}
-			var name = o.args.name.toLowerCase();
-			if(name ===  "customsave"){
-				o.plugin = new mySavePlugin({
-					url: ("url" in o.args)?o.args.url:""/*,
-					logResults: ("logResults" in o.args)?o.args.logResults:true*/
-				});
-			}
-		});
-	});
 define(["dojo/_base/declare",
-	"OoCmS/AbstractController",
+	"dijit/layout/BorderContainer",
+	//	"OoCmS/AbstractController",
 	"dijit/registry",
 	"dojo/dom",
 	"dojo/dom-construct",
 	"dojo/dom-geometry",
 	"dojo/dom-style",
+	"dojo/dom-form",
 	"dojo/query",
 	"dojo/_base/xhr",
 	"dojo/_base/array",
@@ -48,25 +14,231 @@ define(["dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/date/locale",
 	"dojo/topic",
+	"dojo/json",
+	"dijit/_WidgetBase",
+	"dijit/_TemplatedMixin",
+	"dojo/text!./templates/page.html",
 	"dijit/Toolbar",
 	"dijit/form/Button",
-	//	"dijit/form/TextBox",
+	"dijit/form/Form",
+	"dijit/form/TextBox",
 	"dijit/Tooltip",
 	"OoCmS/_treebase",
 	"dojo/data/ItemFileReadStore",
 	"dojo/store/Memory",
-	"dijit/form/ComboBox",// markup require
-	"dijit/Editor" // markup require
-	], function(declare, baseinterface, registry, ddom, ddomctor, ddomgeom, ddomstyle, dquery, xhr, darr, dconnect, lang, locale, dtopic, toolbar, button, ttip, treebase, readstore, memorystore, combobox, editor){
+	"dijit/form/ComboBox",
+	"dijit/Editor",
+	
+	"dojox/html/entities",
+	"dojox/editor/plugins/Save",
+	"dojox/editor/plugins/Preview",
+
+	"dijit/_editor/plugins/EnterKeyHandling",
+	"dijit/_editor/plugins/TextColor",
+	"dijit/_editor/plugins/LinkDialog",
+	"dijit/_editor/plugins/FontChoice",
+	"dijit/_editor/plugins/ViewSource",
+	"dijit/_editor/plugins/TextColor",
+
+	"dojox/editor/plugins/FindReplace",
+	"dojox/editor/plugins/InsertEntity",
+	"dojox/editor/plugins/PasteFromWord",
+	"dojox/editor/plugins/PrettyPrint",
+	"dojox/editor/plugins/ToolbarLineBreak"
+	], function(declare, djborderlayout, registry, ddom, ddomctor, ddomgeom, ddomstyle, ddomform, dquery, xhr, darr, dconnect, dlang, locale, dtopic, djson,
+		djwidgetbase, djtemplated, oopagetemplate, toolbar, button, djform, djtextbox, ttip, treebase, readstore, memorystore, combobox, editor, dxhtmlentities, dxplugSave, dxplugPreview){
 		
 		var InfoText = "Du befinder dig her : <b> Side -&gt; Redigering</b><hr/>"
 		+ "<i>Sidetræet</i> - Venstre sides træ vil ved valg indlæse det dokument du klikker på i editoren.<br/>"
 		+"<i>Editoren</i> - Du kan også starte et nyt dokument op, første indlæsning editoren "
 		+"starter med et tomt dokument der vil lagres i databasen ved valg af <b>'Gem'</b>, "
 		+" alternativt kan editoren ryddes ved <b>'Ryd form'</b> knappen for at starte på en frisk<br>"
+		// hook ctrl+s and save button in editor up with a topic
+		//		var mySavePlugin = declare("mySavePlugin", [dxplugSave],{
+		//			save: function(content){
+		//				dtopic.publish("editor/save")
+		//			}
+		//		});
+		//		dtopic.subscribe("dijit.Editor.getPlugin", null, function(o){
+		//			if(o.plugin)
+		//				return;
+		//			var name = o.args.name.toLowerCase();
+		//			if(name ===  "customsave")
+		//				o.plugin = new mySavePlugin({
+		//					url: ("url" in o.args)?o.args.url:""
+		//				});
+		//		});
 
-		var Page = declare("OoCmS.page", [baseinterface], {
-			id: -1,
+
+
+		var ooplugSave = declare("_custom_save",dxplugSave,{
+			url: 'override',
+			save: function(content){
+				dtopic.publish("editor/save")
+			}
+
+		});
+		var ooplugPreview = declare("_custom_preview", dxplugPreview, {
+			_preview: function() {
+				// summary:
+				//		Function to trigger previewing of the editor document
+				// tags:
+				//		private
+				xhr.post({
+					url: gPage.baseURI + "index.php?OpenDoc&previewfetch=1",
+					content: this.getContents(),
+					load: function(content) {
+						try{
+							var win = window.open("javascript: ''", this._nlsResources["preview"], "status=1,menubar=0,location=0,toolbar=0");
+							win.document.open();
+							win.document.write(content);
+							win.document.close();							
+						}catch(e){
+							console.warn(e);
+						}
+					}
+				})
+			}
+		})
+		// Register this plugin.
+		// fails if local AMD fetched variable is used
+		dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+			if(!o||o.plugin){
+				return;
+			}
+			var name = o.args.name.toLowerCase();
+			if(name === "oosave"){
+				o.plugin = new ooplugSave({
+					url: ("url" in o.args)?o.args.url:"",
+					logResults: ("logResults" in o.args)?o.args.logResults:true
+				});
+			} else if(name == "oopreview") {
+				o.plugin = new ooplugPreview({
+					url: ("url" in o.args)?o.args.url:"",
+					logResults: ("logResults" in o.args)?o.args.logResults:true,
+					getContents: o.args.getPageValues ? o.args.getPageValues : null
+				});
+			}
+		});
+
+
+		var pageform = declare("OoCmS._pageform", [djwidgetbase, djtemplated], {
+			templateString: oopagetemplate,
+			destroy: function() {
+				traceLog(this,arguments)
+				this._doctitle.destroy();
+				this._alias.destroy();
+				this._isdraft.destroyRecursive();
+				this._attachid.destroyRecursive();
+				this._form.destroyRecursive();
+				console.log('FORM' , this.getChildren())
+				this.inherited(arguments);
+			},
+			getValues : function() {
+				var qisdraft =this._isdraft.store.query({
+					name:this._isdraft.get("value")
+				}),
+				qattachid = this._attachid.store.query({
+					name:this._attachid.get("value", "")
+				})
+				return {
+					body : this._editor.get("value"),
+					doctitle: this._doctitle.get("value"),
+					alias: this._alias.get("value"),
+					isdraft: qisdraft.length > 0 ? qisdraft[0].id : 0,
+					attachId: qattachid.length > 0 ? qattachid[0].id : 0
+				};
+			},
+
+			setValues: function(values) {
+				values.isdraft = typeof values.isdraft == "undefined" ? "0" : values.isdraft;
+				values.attachId = typeof values.attachId == "undefined" ? "" : values.attachId;
+				var attach = (values.attachId == "" ? "Øverst" : this._attachid.store.query({
+					id:values.attachId
+				})[0].name),
+				isdraft = this._isdraft.store.query({
+					id:values.isdraft ? 1 : 0
+				})[0].name;
+				this._doctitle.set("value", values.doctitle);
+				this._alias.set("value", values.alias);
+				this._attachid.set("value", attach);
+				this._editor.set("value", values.body)
+				this._isdraft.set("value", isdraft)
+			},	
+			postCreate: function() {
+				
+				traceLog(this,arguments)
+				this.domNode.className += " OoCmSPageForm"
+				this._doctitle = new djtextbox({}, this._doctitle);
+				this._alias = new djtextbox({}, this._alias);
+				this._isdraft = new combobox({}, this._isdraft);
+				this._form = new djtextbox({
+					hidden: true, 
+					type:"hidden"
+				}, this._form);
+				// set in page construct
+				//	this._form._attachid = this._attachbox; 
+				loadCSS(require.toUrl("dojox/editor/plugins/resources/css/TextColor.css"));
+				loadCSS(require.toUrl("dojox/editor/plugins/resources/css/PasteFromWord.css"));
+				loadCSS(require.toUrl("dojox/editor/plugins/resources/css/FindReplace.css"));
+				loadCSS(require.toUrl("dojox/editor/plugins/resources/css/InsertEntity.css"));
+				loadCSS(require.toUrl("dojox/editor/plugins/resources/css/Save.css"));
+				loadCSS(require.toUrl("dojox/editor/plugins/resources/css/Preview.css"));
+				var ed = new editor({
+					name: 'body',
+					extraPlugins:[ '||',
+					{
+						name: 'oopreview',
+						getPageValues: this.getPageValues
+					},
+					'createLink',
+					'unlink',
+					'|',
+					'insertImage',
+					'insertEntity',
+					//					'pastefromword',
+					//					'|',
+					'foreColor',
+					'hiliteColor',
+					'findreplace',
+					{
+						name: 'prettyprint',
+						entityMap: dxhtmlentities.html.concat(dxhtmlentities.latin),
+						indentBy: 3,
+						lineLength: 80,
+						xhtml: true
+					},
+					'oosave', 
+
+					'viewsource','|',
+					'||',
+					{
+						name: 'fontName', 
+						plainText: true
+					}, '|',
+
+					{
+						name: 'fontSize', 
+						plainText: true
+					}, '|',
+
+					{
+						name: 'formatBlock', 
+						plainText: true
+					}], 
+					styleSheets: gPage.baseURI + 'css/oocms.css'
+				}, this._editor);
+				this._editor = ed;
+			}
+		//			_doctitle dijit.form.TextBox
+		//_alias dijit.form.TextBox
+		//_isdraft dijit.form.ComboBox
+		//_editor
+
+		});
+
+		var Page = declare("OoCmS.page", [djborderlayout], {
+			pageid: -1,
 			attachId: null,
 			position: null,
 			body: '',
@@ -100,23 +272,27 @@ define(["dojo/_base/declare",
 			_editor: undefined,
 
 			constructor: function constructor(/*Object*/ args){
-				if(args) lang.mixin(this, args);
-				console.log('ctor')
+				if(args) dlang.mixin(this, args);
+				traceLog(this,arguments)
+				//				this.pageid = this.pageid + "_" + Page.instancecount;
 
-				this.dijitrdyId = 'pageformEditor'
+
+				this.dijitrdyId = null; //'pageformEditor'
+				this.inherited(arguments);
+				
 			},
 			bindDom : function bindDom(node) {
 				this.attachTo = node;
 			},
-			create : function create() {
-				console.info(traceLog(this,arguments));
+			_create : function create() {
+				traceLog(this,arguments)
 				var self = this;
 				xhr.post({
 					content: this.getValues(),
 					url: this.editurl,
 					load : function(res) {
 						var id = res.replace(/.*ID=\"/, "").replace(/\".*/, "");
-						self.id = ((self.id==-1) ? id : self.id);
+						self.pageid = ((self.pageid==-1) ? id : self.pageid);
 						if(res.indexOf("SAVED") == -1) {
 							dtopic.publish("notify/save/error", "Fejl!", res, [ {
 								id:'saveoption',
@@ -143,9 +319,18 @@ define(["dojo/_base/declare",
 
 			},
 			read : function read( id ) {
-				console.info(traceLog(this,arguments));
+				traceLog(this,arguments)
 				var self = this,
-				type = this._pageselector.model.store._getItemByIdentity(id);
+				store = this._pageselector.model.store,
+				type= store._getItemByIdentity(id);
+				
+				if(!store._loadFinished) {
+					var handle = this.getSelector().on("load", function() {
+						handle.remove();
+						self.read(id);
+					});
+					return;
+				} else if (!type) return;
 				type = type._S.getValue(type, "type");
 
 				xhr.get( {
@@ -163,16 +348,11 @@ define(["dojo/_base/declare",
 
 			},
 			update : function update() {
-				console.info(traceLog(this,arguments));
+				traceLog(this,arguments)
 				var self = this;
-				// why? purpose is ability to backstep, look into it
-				dquery("[name=\"body\"]", this._form)[0].value = this._editor.getValue();
-				
-						
-
 				xhr.post({
 					content: this.getValues(),
-					url: this.editurl + (this.editurl.indexOf('?')!=-1?"&":"?") + "id="+this.id,
+					url: this.editurl + (this.editurl.indexOf('?')!=-1?"&":"?") + "id="+this.pageid,
 					load : function(res) {
 						if(res.indexOf("SAVED") == -1) {
 							dtopic.publish("notify/save/error", "Fejl!", res, [ {
@@ -193,7 +373,7 @@ define(["dojo/_base/declare",
 							classes:'dijitEditorIcon dijitEditorIconUndo'
 						} ]);
 						var id = res.replace(/.*ID=\"/, "").replace(/\".*/, "");
-						self.id = ((self.id==-1) ? id : self.id);
+						self.pageid = ((self.pageid==-1) ? id : self.pageid);
 						self.saveState = new Date();
 						self.updateUI();
 						self._pageselector.update();
@@ -205,7 +385,7 @@ define(["dojo/_base/declare",
 
 			},
 			reset: function reset() {
-				this.id= -1;
+				this.pageid= -1;
 				this.attachId= null;
 				this.position= null;
 				this.body= '';
@@ -223,6 +403,7 @@ define(["dojo/_base/declare",
 				this.savedState = null;
 				this.resetForm();
 				this.updateUI();
+				console.log('hier')
 				this._pageselector.update();
 			},
 			_performDelete: function _performDelete() {
@@ -235,7 +416,7 @@ define(["dojo/_base/declare",
 				xhr.post({
 					url:self.editurl.replace(/\?.*/, "") + "?delElement",
 					content:  {
-						id: self.id,
+						id: self.pageid,
 						type : self.type,
 						partial:true,
 						recursive: recurse
@@ -260,7 +441,7 @@ define(["dojo/_base/declare",
 				});
 			},
 			del : function del( ) {
-				console.info(traceLog(this,arguments));
+				traceLog(this,arguments)
 				dtopic.publish("notify/delete/confirm", "Advarsel, sletter dokument",
 					'<div style="vertical-align:middle;line-height:14px"><label for="recurseDelete">'+
 					'Slet alle underdokumenter</label><input type="checkbox" '+
@@ -275,23 +456,23 @@ define(["dojo/_base/declare",
 					}
 					]);
 			},
+			// gets form values an asserts them for proper format before sending to
+			// server. use this instead of calling _form.getValues() directly
 			getValues : function getValues() {
-				var attach = this.getAttachBox().get("value", "");
-				if(attach == "Øverst") attach = "";
-				else if(attach != "") attach = parseInt(attach.split(" - ")[0]);
-				return {
-					body : this._editor.getValue(),
-					doctitle: dijit.getEnclosingWidget(dquery("[name=\"doctitle\"]", this._form)[0]).get("value"),
-					alias: dijit.getEnclosingWidget(dquery("[name=\"alias\"]", this._form)[0]).get("value"),
-					form: attach == "" || this.isdraft == 1 ? 'page' : 'subpage',
-					isdraft: this.isdraft,
-					attachId: attach
-				};
+				var values = this._form.getValues();
+				// if a draft, it cannot be attached to a page
+				if(values.attachId == 0 || values.isdraft == 1) values.attachId = "";
+				// if a draft it must match toplevel queries (cannot be subpage)
+				// _form.getValues() does not supply this attribute
+				if(values.isdraft == 1 || values.attachId == "") values.form = "page"
+				else if(values.attachId != "") values.form = "subpage"
+				return values;
 			},
 			onPageLoaded: function onPageLoaded(self, data, body) {
-				console.info(traceLog(this,arguments));
+				traceLog(this,arguments)
 
-				data = dojo.fromJson(data);
+				data = djson.parse(data);
+				console.log(data);
 				if(!data || !data.items) return;
 				data=data.items[0];
 				self.title			= data.title?data.title:"";
@@ -306,7 +487,7 @@ define(["dojo/_base/declare",
 				self.lastmodified	= locale.parse(data.lastmodified, self._dateFromSQL);
 				self.isdraft		= data.isdraft;
 				self.showtitle		= !!data.showtitle;
-				self.id				= parseInt(data.id);
+				self.pageid				= parseInt(data.id);
 				self.type			= data.type;
 				self.body			= body;
 				self.saveState		= new Date();
@@ -316,25 +497,18 @@ define(["dojo/_base/declare",
 
 			},
 			resetForm: function resetForm() {
-				console.info(traceLog(this,arguments));
-				var form = this._form,
-				self = this,
-				alias = this.alias,
-				title = this.title;
-				dquery("[name=\"body\"]", this._form)[0].value = this.body;
-				console.log(this.ready)
-				this.ready.then(function() {
-					self._editor.setValue(self.body);
-					dijit.getEnclosingWidget(dquery("[name=\"doctitle\"]", form)[0])
-					.set("value", title);
-					dijit.getEnclosingWidget(dquery("[name=\"alias\"]", form)[0])
-					.set("value", alias);
-				});
-		
+				traceLog(this,arguments)
+	
+				this._form.setValues({
+					doctitle: this.title,
+					alias: this.alias,
+					isdraft: this.isdraft,
+					body: this.body
+				})		
 			},
 		
 			updateUI : function updateUI() {
-				console.info(traceLog(this,arguments));
+				traceLog(this,arguments)
 				var t = "page",
 				self = this,
 				actions = this.getToolbar().getChildren();
@@ -346,40 +520,35 @@ define(["dojo/_base/declare",
 				//console.log("get"+gPage.baseURI+"/openView/"+(t == "include" ? "Resources":"Documents")+".php"+ "?format=json&type="+t+"&searchid="+gDocument.id);
 				////////////// FAIL TODO: create logic for searchid's
 				//nAttachments
-				if(this.id != -1) {
+				if(this.pageid != -1) {
 					xhr.get({
 
-						url:gPage.baseURI+'/openView/Documents.php?format=json&searchid='+this.id,
+						url:gPage.baseURI+'/openView/Documents.php?format=json&searchid='+this.pageid,
 						load:function(res) {
-							var js = eval('('+res+')'); 
+							var js = eval('('+res+')'), children = 0; 
 							darr.forEach(js.items, function(it) {
-								if(it.id==self.id) {
-									ddom.byId('nSubPages').innerHTML = it.children ? it.children.length : 0;
-									self.nResources = it.children ? it.children.length : 0;
+								if(it.id==self.pageid) {
+									children++;
 								}
 							});
+							ddom.byId('nSubPages').innerHTML = children
 						}
 					});
 					// nResources
 					xhr.get({
-						url:gPage.baseURI+'/openView/Resources.php?format=json&searchdoc='+this.id,
+						url:gPage.baseURI+'/openView/Resources.php?format=json&searchdoc='+(this.attachId != "" ? this.attachId : this.pageid),
 						load:function(res) {
 							var js = eval('('+res+')'), children=0;
-							var resourceList = [];
-							darr.forEach(js.items, function(it) {
-								if(RegExp(","+self.id+",").test(","+it.attachId+","))
-								{
-									children++;
-								}
-								resourceList.push(it.id);
-							});
-							ddom.byId('nResources').innerHTML = children;
-							self.nResources = children;
-							resourceList = "," + resourceList.join(",") + ",";
-							dquery("tbody [id*='resource_']", ddom.byId('actionCol')).forEach(function(body) {
-								if(!RegExp(","+body.id.replace(/.*_/, "")+",").test(resourceList))
-									body.parentNode.removeChild(body);
-							});
+							ddom.byId('nResources').innerHTML = js.items.length;
+							return;
+						///// server does the lookup no need to iterate
+						//							darr.forEach(js.items, function(it) {
+						//								if(RegExp(","+self.pageid+",").test(","+it.attachId+","))
+						//								{
+						//									children++;
+						//								}
+						//							});
+						//							ddom.byId('nResources').innerHTML = children;
 						}
 					});
 				}
@@ -401,7 +570,7 @@ define(["dojo/_base/declare",
 				ddom.byId("onfly-created").innerHTML = (this.created != null && typeof this.created == "object") ? locale.format(this.created, this._dateToScreen) : "Ukendt";
 				this._isdraftcombo.setValue(this.isdraft == 1 ? "Kladde" : "Publiceret");
 
-				if(this.id != -1) {
+				if(this.pageid != -1) {
 					actions[0].set("disabled", true);
 					actions[1].set("disabled", true);
 					actions[2].set("disabled", false);
@@ -414,23 +583,28 @@ define(["dojo/_base/declare",
 				}
 			},
 			isDirty : function isDirty() {
-				console.info(traceLog(this,arguments));
+				traceLog(this,arguments)
 				// not running body through editor prettyprint to validate alikeness
-				var titlechange =dijit.getEnclosingWidget(this._form.elements['doctitle']).get("value") != this.title,
-				aliaschange = dijit.getEnclosingWidget(this._form.elements[ 'alias'  ] ).get("value") != this.alias,
-				bodyblank = this._editor.getValue().trim() == "<br />" && this.body == "",
-				bodychange = this._editor.getValue() != this.body;
+				var cur = this.getValues()
+				var titlechange = cur.doctitle != this.title,
+				aliaschange = cur.alias != this.alias,
+				bodyblank = cur.body.trim() == "<br />" && this.body == "",
+				bodychange = cur.body != this.body;
 				return (!bodyblank && bodychange) || titlechange || aliaschange;
 			},
-			getToolbar : function getToolbar() {
-				console.info(traceLog(this,arguments));
+
+			getToolbar : function getToolbar(mixin) {
+				traceLog(this,arguments)
 				if(this._toolbar) return this._toolbar
-				var bt, tb = this._toolbar = new dijit.Toolbar({id:'pageToolbar'});
+				var bt, tb = this._toolbar = new toolbar(dlang.mixin({
+					style:'heigth: 24px',
+					id:'pageToolbar'
+				},mixin));
 				bt = new button({
 					id:'pageToolbar-clear',
 					label: "Ryd form",
 					showLabel: true,
-					onClick: lang.hitch(this, "reset", true),
+					onClick: dlang.hitch(this, "reset", true),
 					iconClass: "dijitEditorIcon dijitEditorIconUndo"
 				});
 				tb.addChild(bt);
@@ -438,7 +612,7 @@ define(["dojo/_base/declare",
 					id:'pageToolbar-create',
 					label: "Opret",
 					showLabel: true,
-					onClick: lang.hitch(this, "create"),
+					onClick: dlang.hitch(this, "create"),
 					iconClass: "dijitEditorIcon dijitEditorIconNewPage"
 				});
 				tb.addChild(bt);
@@ -446,7 +620,7 @@ define(["dojo/_base/declare",
 					id:'pageToolbar-save',
 					label: "Gem",
 					showLabel: true,
-					onClick: lang.hitch(this, "update"),
+					onClick: dlang.hitch(this, "update"),
 					iconClass: "dijitIconSave"
 				});
 				tb.addChild(bt);
@@ -454,7 +628,7 @@ define(["dojo/_base/declare",
 					id:'pageToolbar-delete',
 					label: "Slet",
 					showLabel: true,
-					onClick: lang.hitch(this, "del"),
+					onClick: dlang.hitch(this, "del"),
 					iconClass: "dijitIconDelete"
 				});
 				tb.addChild(bt);
@@ -462,45 +636,59 @@ define(["dojo/_base/declare",
 					id:'pageToolbar-info',
 					showLabel: false,
 					iconClass: "OoIcon-18 OoIconInfo",
-					style:'float:right',
-					id: 'infobutton'
+					style:'float:right'
 				});
 				bt.startup();
 				tb.addChild(bt);
-				this.ready.then(function() {
-					new ttip({
-						id:'pageToolbar-infoTooltip',
-						label: "<div style=\"width:450px\">"+InfoText+"</div>",
-						connectId: ['infobutton']
-					})
-				})
+				
+
+				
 				return this._toolbar;
 			},
 			getEditor: function() {
-				if(this._editor) return this._editor;
-				return (this._editor = registry.byId('pageformEditor'));
+				if(this._form._editor) return this._form._editor;
+				return null
 			},
-			getForm: function getForm() {
-				console.info(traceLog(this,arguments));
+			getForm: function getForm(mixin) {
+				traceLog(this,arguments)
 				if(this._form) return this._form;
-				this._form = this.attachTo.getElementsByTagName('form')[0];
-				this.editurl = this.editurl || this._form.action;
+
+				this._form = new pageform(dlang.mixin({
+					}, mixin));
+				this._form.startup()
+				new ttip({
+					id:'pageToolbar-infoTooltip',
+					label: "<div style=\"width:450px\">"+InfoText+"</div>",
+					connectId: ['pageToolbar-info']
+				}).startup()
+				this.getAttachBox()
+				this.editurl = this.editurl || this._form.formNode.action;
 				return this._form;
 
 			},
+			getIsDraftBox: function getIsDraftBox() {
+				traceLog(this,arguments)
+				var box = this.getForm()._isdraft;
+				if(box && !box.nodeType) return box;
+			},
 			getAttachBox: function getAttachBox() {
-				console.info(traceLog(this,arguments));
-				if(this._attachbox) return this._attachbox;
+				traceLog(this,arguments)
+				var box = this.getForm()._attachid;
+				if(box && !box.nodeType) return box;
 				var self = this;
 				this._attachbox = new combobox({
 					id: 'attachIdComboBox',
 					data:[]
-				}, 'attachidcombo');
-				this.observers.push(dconnect.connect(this._pageselector, "onLoad", this, function() {
-				console.log("store load");
+				}, this._form._attachid);
+				this._form._attachid = this._attachbox;
+				console.log(this._form._attachid)
+				//				this._attachbox.placeAt(this._form._attachid.parentNode);
+				//				console.log(this._form._isdraft)
+				this.getSelector().on("load", dlang.hitch(this, function() {
+
 
 					var data = [{
-						id:9999,
+						id:0,
 						name:'Øverst'
 					}], 
 					cur = this.attachId,
@@ -508,7 +696,6 @@ define(["dojo/_base/declare",
 					src= this._pageselector.model.store._arrayOfAllItems;
 			
 					darr.forEach(src, function(item) {
-
 						var s = item._S, isdraft = s.getValue(item, "isdraft"), id = s.getValue(item, "id")
 						if(isdraft == "0") {
 							if(cur == id)
@@ -522,7 +709,7 @@ define(["dojo/_base/declare",
 					this._attachbox.set("store", new memorystore({
 						data:data
 					}));
-					this._attachbox.set("value", setVal);
+					this._attachbox.set("value", setVal == "" ? "Øverst" : setVal);
 				}));
 				this._attachbox.onChange = function(val) {
 					if(val == "Øverst") self.attachId = "";
@@ -530,10 +717,34 @@ define(["dojo/_base/declare",
 				}
 				return this._attachbox;
 			},
-			getSelector: function getSelector() {
-				console.info(traceLog(this,arguments));
+			getSelectorToolbar : function getSelectorToolbar(mixin){
+				dlang.mixin({
+					id: 'pageSelectorToolbar',
+					style:'padding-right:5px; height:24px'
+				}, mixin)
+				if(this._pageselectortbar) return this._pageselectortbar
+				var w, tb = new toolbar(mixin),
+				ps=this.getSelector()
+
+				w = new button({
+					id: 'pageSelectorToolbar-update',
+					iconClass:"dijitIconUndo",
+					label : '&thinsp;',
+					title: 'Genindlæs sidetræ',
+					style: 'float: right;margin-top:2px; height: 18px', /// << match dijitEditorIcon 'pr theme'
+					onClick: dlang.hitch(ps,ps.update)
+				//   iconClass: "dijitEditorIcon dijitEditorIcon"+label
+				});
+				tb.addChild(w);
+				ddomctor.create('div', {
+					style:'clear:both'
+				},tb.domNode, "last");
+				return (this._pageselectortbar = tb);
+			},
+			getSelector: function getSelector(mixin) {
+				traceLog(this,arguments)
 				if(this._pageselector) return this._pageselector;
-				this._pageselector = new treebase({
+				dlang.mixin(mixin,{
 					id: 'pageSelectorTree',
 					rootLabel : "Dokumenter",
 					store: new readstore({
@@ -541,102 +752,25 @@ define(["dojo/_base/declare",
 						url: gPage.baseURI + '/openView/Documents.php?format=json',
 						urlPreventCache: true,
 						hierarchical: true
-					}),
-					actionText: {
-						page : '<h4>Kategori (Page)</h4><ul style="max-width: 520px;">'+
-						'<li>Dobbeltklik på elementet for at visuelt at se indholdet (uden menu-navigation).</li>'+
-						'<li>Højreklik for yderligere muligheder, kan f.eks. konverteres til '+
-						'under-side og derved tilknyttes en anden side ved træk-og-slip.</li></ul>',
-						subpage : '<h4>Underside (SubPage)</h4><ul style="max-width: 520px;">'+
-					'<li>Træk undersiden over en <b>Page</b> i første niveau for at tilknytte til en kategori.</li>'+
-					'<li>Dobbeltklik for at hente og vise selve indholdet i popup.</li>'+
-					'<li>Højreklik for yderligere muligheder, kan således f.eks. '+
-					'slettes eller konverteres til top-niveau kategori-side</li></ul>'
-					
-					}
-				});
-				var w, tb = this._pageselectortoolbar = new toolbar({
-					id: 'pageSelectorToolbar',
-					style:'padding-right:5px'
-				}, "pagetoolbar");
-				//				w = new dijit.form.TextBox({
-				//					store: this._pageselector.model.store,
-				//					searchAttr: "title",
-				//					
-				//				})
-				//				console.log(w)
-				//				tb.addChild(w);
-				w = new button({
-					id: 'pageSelectorToolbar-update',
-					iconClass:"dijitIconUndo",
-					label : '&thinsp;',
-					title: 'Genindlæs sidetræ',
-					style: 'float: right;margin-top:2px; height: 18px', /// << match dijitEditorIcon 'pr theme'
-					onClick: lang.hitch(this._pageselector,this._pageselector.update)
-				//   iconClass: "dijitEditorIcon dijitEditorIcon"+label
-				});
-				tb.addChild(w);
-				ddomctor.create('div', {
-					style:'clear:both'
-				},tb.domNode, "last");
-				//				this._pageselector.infoHelpNode = dquery("#pageleftcolumn .helpNode")[0];
-				//				this._pageselector.infoHoverNode = dquery("#pageleftcolumn .infoNode")[0];
-				this._pageselector.placeAt('pageselector').startup();
+					})
+				})
+				this._pageselector = new treebase(mixin);
+				
 				this._pageselector.model.store.fetch();
-				this._pageselector.onClick = lang.hitch(this, this.onPageSelected);
-				this._pageselectortoolbar.placeAt("pageselectortbar").startup()
+				this._pageselector.on("click", dlang.hitch(this, this.onPageSelected));
 				return this._pageselector;
+				
 			},
-//			getEditor: function getEditor() {
-//				if(this._editor) return this._editor;
-//				this._editor = new dijit.Editor({
-//					plugins:[
-//					'|',
-//					'bold','italic','underline','|',
-//					'createLink',
-//					'unlink',
-//					'|',
-//					'insertImage',
-//					'insertEntity',
-//					'pastefromword',
-//					'|',
-//					'foreColor',
-//					'hiliteColor',
-//					'findreplace',
-//					{
-//						name: 'prettyprint',
-//						entityMap: dojox.html.entities.html.concat(dojox.html.entities.latin),
-//						indentBy: 3,
-//						lineLength: 80,
-//						xhtml: true
-//					},
-//					'customsave',
-//					{
-//						name: 'preview',
-//						stylesheets: [
-//						'{{dataUrl}}dojox/editor/tests/testBodySheet.css',
-//						'{{dataUrl}}dojox/editor/tests/testContentSheet.css'
-//						]
-//					},
-//					'viewsource','|',
-//					'||',
-//					'|',
-//					{
-//						name: 'fontName', 
-//						plainText: true
-//					}, '|', {
-//						name: 'fontSize', 
-//						plainText: true
-//					}, '|', {
-//						name: 'formatBlock', 
-//						plainText: true
-//					},'|'
-//					], 
-//					styleSheets:'http://ajax.googleapis.com/ajax/libs/dojo/1.7.2/dojo/resources/dojo.css'
-//				});
-//			},
+			onDraftChanged: function(val) {
+				//dont do this, have backstep capeability
+				//this.isdraft = (val == "Kladde") ? 1 : 0; 
+				if(val == "Kladde") this.getAttachBox().set("value", "Øverst");
+			},
+			onAttachChanged: function(val) {
+				if(val != "Øverst") this.getIsDraftBox().set("value", "Publiceret")
+			},
 			onPageSelected: function onPageSelected(item) {
-				console.info(traceLog(this,arguments));
+				traceLog(this,arguments)
 				if(!item || !item._S) return;
 				var id = item._S.getValue(item, "id"),
 				self = this;
@@ -658,70 +792,112 @@ define(["dojo/_base/declare",
 				
 			},
 			editor_saveaction: function() {
-				this.id == -1 && this.create() || this.update();
+				this.pageid == -1 && this.create() || this.update();
 			},
 			postCreate: function postCreate() {
-				console.info(traceLog(this,arguments));
-				console.log('postcreate')
-				this.inherited(arguments);
-				this._isdraftcombo = registry.byId('isdraftcombo');
-				this._isdraftcombo.onChange = function(val) {
-					this.isdraft = (val == "Kladde") ? 1 : 0;
-					if(this.isdraft == 1) this.getAttachBox().set("value", "Øverst");
+				traceLog(this,arguments)
+				var self = this,
+				left_layout = new djborderlayout({
+					region:'left', 
+					style:'width: 190px;overflow-x:hidden', 
+					splitter:false,
+					id: 'leftcolumn_layout'
+				}),
+				center_layout = new djborderlayout({
+					region: 'center', 
+					gutters:false, 
+					splitters:false
+				}),
+				selector = this.getSelector({
+					region: 'center',
+					gutter:false
+				});
+
+				this.domNode.className += " OoCmSPage"
+
+				left_layout.addChild(this.getSelectorToolbar({
+					splitter: false,
+					gutter: false,
+					region: 'top'
+				}));
+				left_layout.addChild(selector);
+				center_layout.addChild(this.getToolbar({
+					region: 'top',
+					splitter:false,
+					gutter:false
+				}));
+				center_layout.addChild(this.getForm({
+					region:'center',
+					splitter:false,
+					gutter:false
+				}));
+				this.addChild(new djwidgetbase({
+					id:'pageHeader',
+					region:'top',
+					splitter: false,
+					gutter: false
+				}, ddomctor.create('div', {
+					className:'paneHeader',
+					innerHTML:'Sider &gt; Opsætning'
+				})));
+				this.addChild(left_layout);
+				this.addChild(center_layout);
+				try {
+					
+					this._form._isdraft.on("change", dlang.hitch(this, this.onDraftChange));
+					var save_action = dlang.hitch(this, this.editor_saveaction)
+					dtopic.subscribe("editor/save", save_action);
+					this._form._editor.save = save_action;
+				} catch(e) {
+					console.error(e)
 				}
+				this.inherited(arguments);
+				return;
+				
 				if(!this.getSelector()) console.error("Error occured while instantiating pageselector...");
 				if(!this.getAttachBox()) console.error("Error occured while instantiating attachId combobox...");
-				var save_action = lang.hitch(this, this.editor_saveaction)
-				dojo.subscribe("editor/save", save_action);
-				this._editor = this.getEditor();
-				this._editor.save = save_action;
 				this.updateUI();
 				this.layout();
 			},
 			startup: function startup() {
-				console.log('startup')
+				traceLog(this,arguments)
+				this.inherited(arguments);
+				return;				
 
-				console.info(traceLog(this,arguments));
-				if(!this.getForm()) console.error("No form with submit instructions underneath given element or error occured while instantiating...");
-				if(!this.getToolbar()) console.error("Error occured while instantiating pagetoolbar...");
-				ddom.byId('pagetoolbarWrapper').appendChild(this._toolbar.domNode);
 				this.inherited(arguments);
 			},
-			layout: function() {
-				this.inherited(arguments)
-				var ed = this.getEditor();
-				if(!this._pageframe.formwrapper) this._pageframe.formwrapper = ddom.byId('formWrapper');
-
-				ddomstyle.set(this._pageframe.formwrapper, {
-					height: (baseinterface.calcmarginbox(this._pageframe.center).h
-						- ddomgeom.getMarginBox(this._pageframe.formwrapper).t 
-						-baseinterface.calcextents(this._pageframe.center).h
-						-baseinterface.calcextents(this._pageframe.formwrapper).h) + "px"
-				})
-				if(ed)
-					ed.resize({
-						h: baseinterface.calcmarginbox(this._pageframe.center).h // outer height
-						- ddomgeom.getMarginBox(this._editor.domNode).t // minus offset editor node
-						-  baseinterface.calcextents(this._editor.domNode).h - 5
-						-  baseinterface.calcextents(this._pageframe.center).h 
-					})
-			},
+			//			layout: function() {
+			//				this.inherited(arguments)
+			//				var ed = this.getEditor();
+			//				
+			//				//				ddomstyle.set(this._pageframe.formwrapper, {
+			//				//					height: (djborderlayout.calcmarginbox(this._pageframe.center).h
+			//				//						- ddomgeom.getMarginBox(this._pageframe.formwrapper).t 
+			//				//						-djborderlayout.calcextents(this._pageframe.center).h
+			//				//						-djborderlayout.calcextents(this._pageframe.formwrapper).h) + "px"
+			//				//				})
+			//				if(ed)
+			//					ed.resize({
+			//						h: djborderlayout.calcmarginbox(this._pageframe.center).h // outer height
+			//						- ddomgeom.getMarginBox(this._editor.domNode).t // minus offset editor node
+			//						-  djborderlayout.calcextents(this._editor.domNode).h - 5
+			//						-  djborderlayout.calcextents(this._pageframe.center).h 
+			//					})
+			//			},
 			unload: function unload() {
-				console.info(traceLog(this,arguments));
+				traceLog(this,arguments)
+				this._form.destroy();
+				var ttip = registry.byId('pageToolbar-infoTooltip')
+				if(ttip) ttip.destroy();
 				darr.forEach(this.observers, dconnect.disconnect)
-				this._toolbar.destroyRecursive();
-				this._editor.destroyRecursive();
 				this._pageselector.store.close()
-				this._pageselector.destroyRecursive();
-				this._isdraftcombo.destroy();
-				this._attachbox.destroy();
 				try {
-					dojo.unsubscribe("editor/save");
+					dtopic.unsubscribe("editor/save");
 				}catch(e){}
-				ddomctor.destroy(this._form);
 			}
 			
 		});
+		Page.instancecount = 0;
 		return Page;
 	});
 console.log('eval page.js');
